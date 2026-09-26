@@ -31,7 +31,7 @@ class _MyAppState extends State<NavigationBar> {
     LibraryScreen(),
     SettingsScreen(),
   ];
-  int currentIndex = 0;
+  int currentIndex = 1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
