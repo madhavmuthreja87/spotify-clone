@@ -39,6 +39,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
+
                             Icon(
                               Icons.camera_enhance_outlined,
                               color: Colors.white,

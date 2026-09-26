@@ -10,6 +10,255 @@ class LibraryScreen extends StatefulWidget {
 class _LibraryScreenState extends State<LibraryScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text("Library Screen")));
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Container(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        child: Text("M"),
+                        backgroundColor: Colors.orange,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Library",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 25,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Icon(
+                                  size: 32,
+                                  Icons.search_outlined,
+                                  color: Colors.white,
+                                ),
+                                const SizedBox(width: 10),
+                                Icon(
+                                  size: 40,
+                                  Icons.add_rounded,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 5,
+                          horizontal: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(17),
+                        ),
+                        child: Text(
+                          "Playlists",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 5,
+                          horizontal: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(17),
+                        ),
+                        child: Text(
+                          "Albums",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 5,
+                          horizontal: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(17),
+                        ),
+                        child: Text(
+                          "Artists",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 25),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          GestureDetector(
+                            child: Container(
+                              child: Row(
+                                children: [
+                                  Icon(Icons.arrow_upward, color: Colors.white),
+                                  Icon(
+                                    Icons.arrow_downward,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            "Recents",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Icon(Icons.grid_view, color: Colors.white),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  ListView(
+                    shrinkWrap: true,
+                    children: [
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        hoverColor: Colors.green,
+                        leading: Container(
+                          height: 55,
+                          width: 55,
+
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [Colors.deepPurple, Colors.white],
+                            ),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Center(
+                            child: Icon(Icons.favorite, color: Colors.white),
+                          ),
+                        ),
+                        title: Text(
+                          "Liked Songs",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                        subtitle: Row(
+                          children: [
+                            Icon(
+                              Icons.push_pin_rounded,
+                              color: Colors.green,
+                              size: 20,
+                            ),
+                            Text(
+                              " Playlist • Username",
+                              style: TextStyle(
+                                color: const Color.fromARGB(255, 159, 159, 159),
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        hoverColor: Colors.green,
+                        leading: CircleAvatar(
+                          child: Icon(Icons.person),
+                          radius: 25,
+                        ),
+                        title: Text(
+                          "Karan Aujhla",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                        subtitle: Row(
+                          children: [
+                            Text(
+                              "Artist",
+                              style: TextStyle(
+                                color: const Color.fromARGB(255, 159, 159, 159),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        hoverColor: Colors.green,
+                        leading: CircleAvatar(
+                          child: Icon(Icons.person_2),
+                          radius: 25,
+                        ),
+                        title: Text(
+                          "Paradox",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                        subtitle: Row(
+                          children: [
+                            Text(
+                              "Artist",
+                              style: TextStyle(
+                                color: const Color.fromARGB(255, 159, 159, 159),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        hoverColor: Colors.green,
+                        leading: CircleAvatar(
+                          child: Icon(Icons.person_3),
+                          radius: 25,
+                        ),
+                        title: Text(
+                          "Shubh",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                        subtitle: Row(
+                          children: [
+                            Text(
+                              "Artist",
+                              style: TextStyle(
+                                color: const Color.fromARGB(255, 159, 159, 159),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
