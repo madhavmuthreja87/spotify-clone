@@ -4,7 +4,7 @@ import 'package:sf/screens/recents_screen.dart';
 import 'package:sf/track_model.dart';
 
 class SearchScreen extends StatefulWidget {
-  const new({super.key});
+  const SearchScreen({super.key});
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();

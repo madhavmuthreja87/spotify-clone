@@ -1,9 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sf/audis_api.dart';
+
+import 'package:sf/providers/track_provider.dart';
 import 'package:sf/track_model.dart';
 
 class RecentsScreen extends StatefulWidget {
-  const new({super.key});
+  const RecentsScreen({super.key});
 
   @override
   State<RecentsScreen> createState() => _RecentsScreenState();
@@ -53,6 +58,7 @@ class _RecentsScreenState extends State<RecentsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final player = context.watch<TrackProvider>();
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -103,30 +109,36 @@ class _RecentsScreenState extends State<RecentsScreen> {
               itemBuilder: (context, index) {
                 final searchContent = searchResult[index];
 
-                return ListTile(
-                  dense: true,
-                  leading: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
+                return GestureDetector(
+                  onTap: () {
+                    log("music list tapped");
+                    context.read<TrackProvider>().setSongAndPlay(searchContent);
+                  },
+                  child: ListTile(
+                    dense: true,
+                    leading: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      height: 50,
+                      width: 50,
+                      child: Image.network(
+                        searchContent.artwork!,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                    height: 50,
-                    width: 50,
-                    child: Image.network(
-                      searchContent.artwork!,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  title: Text(
-                    searchContent.title,
-                    maxLines: 1,
+                    title: Text(
+                      searchContent.title,
+                      maxLines: 1,
 
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
+                    subtitle: Text(searchContent.artist, style: TextStyle()),
                   ),
-                  subtitle: Text(searchContent.artist, style: TextStyle()),
                 );
               },
             ),

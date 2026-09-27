@@ -5,6 +5,7 @@ class TrackModel {
   final int duration;
   final String isStreamable;
   final String? artwork;
+  final String? streamUrl;
 
   TrackModel({
     required this.id,
@@ -13,6 +14,7 @@ class TrackModel {
     required this.duration,
     required this.isStreamable,
     required this.artwork,
+    required this.streamUrl,
   });
 
   factory TrackModel.fromjson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class TrackModel {
       duration: json['duration'] ?? 0,
       isStreamable: json['is_streamable']?.toString() ?? "",
       artwork: json['artwork']?['480x480'],
+      streamUrl: json['stream']?['url'],
     );
   }
 }
