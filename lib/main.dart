@@ -47,16 +47,19 @@ class _MyAppState extends State<NavigationBar> {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (player.currentSong != null)
-            MiniPlayer(
-              song: player.currentSong!,
-              isPlaying: player.isPlaying,
-              onPlayPause: () {
-                if (player.isPlaying) {
-                  player.pause();
-                } else
-                  player.resume();
-              },
-              onTap: () {},
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: MiniPlayer(
+                song: player.currentSong!,
+
+                onPlayPause: () {
+                  if (player.isPlaying) {
+                    player.pause();
+                  } else
+                    player.resume();
+                },
+                onTap: () {},
+              ),
             ),
           BottomNavigationBar(
             type: BottomNavigationBarType.shifting,

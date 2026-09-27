@@ -8,6 +8,13 @@ class TrackProvider extends ChangeNotifier {
 
   bool isPlaying = false;
 
+  TrackProvider() {
+    player.playingStream.listen((playing) {
+      isPlaying = playing;
+      notifyListeners();
+    });
+  }
+
   Future<void> setSongAndPlay(TrackModel song) async {
     currentSong = song;
     notifyListeners();
@@ -29,16 +36,18 @@ class TrackProvider extends ChangeNotifier {
   }
 
   Future<void> resume() async {
+    isPlaying = true;
+    notifyListeners();
     await player.play();
 
-    isPlaying = true;
     notifyListeners();
   }
 
   Future<void> stop() async {
+    isPlaying = false;
+    notifyListeners();
     await player.stop();
 
-    isPlaying = false;
     notifyListeners();
   }
 

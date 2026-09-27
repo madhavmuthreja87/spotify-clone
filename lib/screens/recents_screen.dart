@@ -72,7 +72,7 @@ class _RecentsScreenState extends State<RecentsScreen> {
             controller: searchController,
             cursorColor: Colors.green,
             autofocus: true,
-
+            selectionControls: EmptyTextSelectionControls(),
             style: TextStyle(
               color: Colors.white,
               fontSize: 17,
@@ -80,6 +80,7 @@ class _RecentsScreenState extends State<RecentsScreen> {
             ),
             decoration: InputDecoration(
               border: OutlineInputBorder(borderSide: BorderSide.none),
+
               filled: true,
               hint: Text(
                 "What do you want to listen to?",
