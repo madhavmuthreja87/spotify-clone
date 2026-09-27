@@ -16,9 +16,10 @@ class _HomeScreenState extends State<HomeScreen> {
     final l = await api.getTrendingTracks();
 
     for (var i in l) {
-      print(i.title);
-      print(i.artist);
-      print(i.id);
+      print("Title: ${i.title}");
+      print("isStreamable: ${i.isStreamable}");
+      print("Artist: ${i.artist}");
+      print("ID: ${i.id}");
       print("-------------");
     }
   }

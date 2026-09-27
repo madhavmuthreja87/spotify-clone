@@ -3,7 +3,7 @@ class TrackModel {
   final String title;
   final String artist;
   final int duration;
-  final bool isStreamable;
+  final String isStreamable;
   final String? artwork;
 
   TrackModel({
@@ -21,7 +21,7 @@ class TrackModel {
       title: json['title']?.toString() ?? "",
       artist: json['artist']?.toString() ?? "",
       duration: json['duration'] ?? 0,
-      isStreamable: json['isStreamable'] ?? false,
+      isStreamable: json['is_streamable']?.toString() ?? "",
       artwork: json['artwork']?['480x480'],
     );
   }

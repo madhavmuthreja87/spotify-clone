@@ -27,13 +27,21 @@ class _RecentsScreenState extends State<RecentsScreen> {
     try {
       final results = await AudisApi().searchTracks(query);
 
+      // final streamableResults = results
+      //     .where((song) => song.isStreamable)
+      //     .toList();
+
       setState(() {
         isSearching = false;
         searchResult = results;
       });
+
       for (var i in searchResult) {
-        print(i.title);
-        print(i.artist);
+        print("Title: ${i.title}");
+        print("isStreamable: ${i.isStreamable}");
+        print("Artist: ${i.artist}");
+        print("ID: ${i.id}");
+        print("-------------");
       }
     } catch (e) {
       setState(() {
@@ -55,8 +63,10 @@ class _RecentsScreenState extends State<RecentsScreen> {
           width: MediaQuery.sizeOf(context).width,
           height: 44,
           child: TextField(
-            cursorColor: Colors.green,
             controller: searchController,
+            cursorColor: Colors.green,
+            autofocus: true,
+
             style: TextStyle(
               color: Colors.white,
               fontSize: 17,
@@ -86,11 +96,39 @@ class _RecentsScreenState extends State<RecentsScreen> {
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [],
-              ),
+
+            child: ListView.builder(
+              physics: BouncingScrollPhysics(),
+              itemCount: searchResult.length,
+              itemBuilder: (context, index) {
+                final searchContent = searchResult[index];
+
+                return ListTile(
+                  dense: true,
+                  leading: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    height: 50,
+                    width: 50,
+                    child: Image.network(
+                      searchContent.artwork!,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  title: Text(
+                    searchContent.title,
+                    maxLines: 1,
+
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  subtitle: Text(searchContent.artist, style: TextStyle()),
+                );
+              },
             ),
           ),
         ),

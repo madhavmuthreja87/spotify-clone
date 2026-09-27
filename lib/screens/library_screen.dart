@@ -148,7 +148,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     children: [
                       ListTile(
                         contentPadding: EdgeInsets.zero,
-                        hoverColor: Colors.green,
+
                         leading: Container(
                           height: 55,
                           width: 55,

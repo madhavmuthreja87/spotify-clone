@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sf/providers/track_provider.dart';
 import 'package:sf/screens/home_screen.dart';
 import 'package:sf/screens/library_screen.dart';
 import 'package:sf/screens/search_screen.dart';
 import 'package:sf/screens/settings_screen.dart';
+import 'package:sf/widgets/mini_player.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(create: (_) => TrackProvider(), child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -35,41 +40,59 @@ class _MyAppState extends State<NavigationBar> {
   int currentIndex = 1;
   @override
   Widget build(BuildContext context) {
+    final player = context.watch<TrackProvider>();
     return Scaffold(
       body: screen[currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.shifting,
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (player.currentSong != null)
+            MiniPlayer(
+              song: player.currentSong!,
+              isPlaying: player.isPlaying,
+              onPlayPause: () {
+                if (player.isPlaying) {
+                  player.pause();
+                } else
+                  player.resume();
+              },
+              onTap: () {},
+            ),
+          BottomNavigationBar(
+            type: BottomNavigationBarType.shifting,
 
-        selectedItemColor: Colors.green,
-        unselectedItemColor: Colors.grey,
+            selectedItemColor: Colors.green,
+            unselectedItemColor: Colors.grey,
 
-        currentIndex: currentIndex,
+            currentIndex: currentIndex,
 
-        onTap: (value) {
-          setState(() {
-            currentIndex = value;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_filled),
-            label: "Home",
-            backgroundColor: Colors.black,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search_rounded),
-            label: "Search",
-            backgroundColor: Colors.black,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.library_books),
-            label: "Library",
-            backgroundColor: Colors.black,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: "Settings",
-            backgroundColor: Colors.black,
+            onTap: (value) {
+              setState(() {
+                currentIndex = value;
+              });
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home_filled),
+                label: "Home",
+                backgroundColor: Colors.black,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.search_rounded),
+                label: "Search",
+                backgroundColor: Colors.black,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.library_books),
+                label: "Library",
+                backgroundColor: Colors.black,
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.settings),
+                label: "Settings",
+                backgroundColor: Colors.black,
+              ),
+            ],
           ),
         ],
       ),
