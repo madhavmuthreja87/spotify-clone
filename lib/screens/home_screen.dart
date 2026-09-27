@@ -388,139 +388,76 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
 
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      spacing: 13,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.blue,
-                          ),
-                          height: MediaQuery.sizeOf(context).height / 3.8,
-                          width: MediaQuery.sizeOf(context).width / 2.5,
+                  FutureBuilder<List<TrackModel>>(
+                    future: AudisApi().getTrendingTracks(),
 
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.green,
-                                ),
-                                height: MediaQuery.sizeOf(context).height / 5,
-                                width: MediaQuery.sizeOf(context).width / 2.5,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      }
 
-                                child: Text("Image"),
+                      if (snapshot.hasError) {
+                        return Text(
+                          "Error: ${snapshot.error}",
+                          style: const TextStyle(color: Colors.white),
+                        );
+                      }
+
+                      final songs = snapshot.data!;
+
+                      return SizedBox(
+                        height: 210,
+
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: songs.length,
+                          itemBuilder: (context, index) {
+                            final song = songs[index];
+
+                            return Container(
+                              height: 210,
+                              width: 150,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              Text("Name of song"),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.blue,
-                          ),
-                          height: MediaQuery.sizeOf(context).height / 3.8,
-                          width: MediaQuery.sizeOf(context).width / 2.5,
-
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.green,
-                                ),
-                                height: MediaQuery.sizeOf(context).height / 5,
-                                width: MediaQuery.sizeOf(context).width / 2.5,
-
-                                child: Text("Image"),
+                              padding: EdgeInsets.only(right: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.network(
+                                      song.artwork ?? "",
+                                      fit: BoxFit.cover,
+                                      height: 160,
+                                      width: 150,
+                                    ),
+                                  ),
+                                  Text(
+                                    song.title,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  Text(
+                                    song.artist,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
                               ),
-                              Text("Name of song"),
-                            ],
-                          ),
+                            );
+                          },
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.blue,
-                          ),
-                          height: MediaQuery.sizeOf(context).height / 3.8,
-                          width: MediaQuery.sizeOf(context).width / 2.5,
-
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.green,
-                                ),
-                                height: MediaQuery.sizeOf(context).height / 5,
-                                width: MediaQuery.sizeOf(context).width / 2.5,
-
-                                child: Text("Image"),
-                              ),
-                              Text("Name of song"),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.blue,
-                          ),
-                          height: MediaQuery.sizeOf(context).height / 3.8,
-                          width: MediaQuery.sizeOf(context).width / 2.5,
-
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.green,
-                                ),
-                                height: MediaQuery.sizeOf(context).height / 5,
-                                width: MediaQuery.sizeOf(context).width / 2.5,
-
-                                child: Text("Image"),
-                              ),
-                              Text("Name of song"),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.blue,
-                          ),
-                          height: MediaQuery.sizeOf(context).height / 3.8,
-                          width: MediaQuery.sizeOf(context).width / 2.5,
-
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.green,
-                                ),
-                                height: MediaQuery.sizeOf(context).height / 5,
-                                width: MediaQuery.sizeOf(context).width / 2.5,
-
-                                child: Text("Image"),
-                              ),
-                              Text("Name of song"),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
+                  Text("Hello", style: TextStyle(color: Colors.white)),
                 ],
               ),
             ),

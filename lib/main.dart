@@ -5,6 +5,7 @@ import 'package:sf/screens/search_screen.dart';
 import 'package:sf/screens/settings_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 

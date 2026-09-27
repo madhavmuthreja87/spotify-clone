@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sf/audis_api.dart';
+import 'package:sf/track_model.dart';
 
 class SearchScreen extends StatefulWidget {
   const new({super.key});
@@ -8,6 +10,39 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  TextEditingController searchController = TextEditingController();
+
+  List<TrackModel> searchResult = [];
+  bool isSearching = false;
+
+  Future<void> searchSongs(String query) async {
+    if (query.trim().isEmpty) {
+      return;
+    }
+
+    setState(() {
+      isSearching = true;
+    });
+
+    try {
+      final results = await AudisApi().searchTracks(query);
+
+      setState(() {
+        isSearching = false;
+        searchResult = results;
+      });
+      for (var i in searchResult) {
+        print(i.title);
+        print(i.artist);
+      }
+    } catch (e) {
+      setState(() {
+        isSearching = false;
+      });
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,6 +86,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   const SizedBox(height: 30),
                   TextField(
+                    controller: searchController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -68,6 +104,9 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                       ),
                     ),
+                    onSubmitted: (value) {
+                      searchSongs(value);
+                    },
                   ),
                   const SizedBox(height: 30),
                   GridView.count(

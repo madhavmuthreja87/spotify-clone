@@ -21,4 +21,23 @@ class AudisApi {
 
     return data.map((track) => TrackModel.fromjson(track)).toList();
   }
+
+  Future<List<TrackModel>> searchTracks(String query) async {
+    log("Searching songs called");
+
+    final url = Uri.parse('$baseUrl/tracks/search')
+        .replace(queryParameters: {'query': query, 'limit': '20'});
+
+    final response = await http.get(url);
+
+    if (response.statusCode != 200) {
+      throw Exception("Failed to search songs :${response.statusCode}");
+    }
+
+    final Map<String, dynamic> json = jsonDecode(response.body);
+
+    final List data = json['data'] ?? [];
+
+    return data.map((track) => TrackModel.fromjson(track)).toList();
+  }
 }
