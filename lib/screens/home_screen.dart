@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sf/audis_api.dart';
+import 'package:sf/track_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const new({super.key});
@@ -8,6 +10,26 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  void display() async {
+    AudisApi api = AudisApi();
+
+    final l = await api.getTrendingTracks();
+
+    for (var i in l) {
+      print(i.title);
+      print(i.artist);
+      print(i.id);
+      print("-------------");
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    display();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
