@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sf/audis_api.dart';
+import 'package:sf/screens/recents_screen.dart';
 import 'package:sf/track_model.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -10,39 +11,6 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  TextEditingController searchController = TextEditingController();
-
-  List<TrackModel> searchResult = [];
-  bool isSearching = false;
-
-  Future<void> searchSongs(String query) async {
-    if (query.trim().isEmpty) {
-      return;
-    }
-
-    setState(() {
-      isSearching = true;
-    });
-
-    try {
-      final results = await AudisApi().searchTracks(query);
-
-      setState(() {
-        isSearching = false;
-        searchResult = results;
-      });
-      for (var i in searchResult) {
-        print(i.title);
-        print(i.artist);
-      }
-    } catch (e) {
-      setState(() {
-        isSearching = false;
-      });
-      print(e);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,29 +52,44 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 30),
-                  TextField(
-                    controller: searchController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      prefixIcon: Icon(Icons.search),
-                      hint: Text(
-                        "What do you want to listen to?",
-
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: const Color.fromARGB(255, 109, 109, 109),
-                          fontSize: 15,
+                  const SizedBox(height: 28),
+                  GestureDetector(
+                    onTap: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RecentsScreen(),
                         ),
                       ),
-                    ),
-                    onSubmitted: (value) {
-                      searchSongs(value);
                     },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 15,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.search,
+                            size: 25,
+                            color: const Color.fromARGB(255, 109, 109, 109),
+                          ),
+                          Text(
+                            "What do you want to listen to?",
+
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: const Color.fromARGB(255, 109, 109, 109),
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 30),
                   GridView.count(
