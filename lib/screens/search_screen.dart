@@ -57,8 +57,14 @@ class _SearchScreenState extends State<SearchScreen> {
                     onTap: () => {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => RecentsScreen(),
+                        PageRouteBuilder(
+                          pageBuilder: (
+                            context,
+                            animation,
+                            secondaryAnimation,
+                          ) => RecentsScreen(),
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
                         ),
                       ),
                     },
