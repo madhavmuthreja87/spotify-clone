@@ -33,7 +33,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Library",
+                              "Your Library",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 25,

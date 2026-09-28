@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'package:sf/providers/track_provider.dart';
 import 'package:sf/screens/home_screen.dart';
@@ -7,8 +9,12 @@ import 'package:sf/screens/search_screen.dart';
 import 'package:sf/screens/settings_screen.dart';
 import 'package:sf/widgets/mini_player.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Hive.initFlutter();
+  await Hive.openBox("recentSongs");
+
   runApp(
     ChangeNotifierProvider(create: (_) => TrackProvider(), child: MyApp()),
   );

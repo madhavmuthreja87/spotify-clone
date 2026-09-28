@@ -37,6 +37,8 @@ dependencies:
   just_audio:
   http:
   provider:
+  hive: 
+  hive_flutter: 
 
 dev_dependencies:
   flutter_test:

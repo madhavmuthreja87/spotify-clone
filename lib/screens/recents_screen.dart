@@ -17,6 +17,7 @@ class RecentsScreen extends StatefulWidget {
 class _RecentsScreenState extends State<RecentsScreen> {
   TextEditingController searchController = TextEditingController();
   List<TrackModel> searchResult = [];
+  List<TrackModel> recentResult = [];
 
   bool isSearching = false;
 
@@ -93,58 +94,146 @@ class _RecentsScreenState extends State<RecentsScreen> {
               fillColor: const Color.fromARGB(255, 106, 105, 105),
             ),
             onSubmitted: (value) {
+              // if (value.isEmpty) {
+              //   setState(() {
+              //     searchResult = [];
+              //   });
+              //   return;
+              // }
+
               searchSongs(value);
             },
           ),
         ),
       ),
 
-      body: Container(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      body: SafeArea(
+        child: searchResult.isNotEmpty
+            ? ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                itemCount: searchResult.length,
+                itemBuilder: (context, index) {
+                  final searchContent = searchResult[index];
 
-            child: ListView.builder(
-              physics: BouncingScrollPhysics(),
-              itemCount: searchResult.length,
-              itemBuilder: (context, index) {
-                final searchContent = searchResult[index];
+                  return GestureDetector(
+                    onTap: () {
+                      log("music list tapped");
+                      context.read<TrackProvider>().setSongAndPlay(
+                        searchContent,
+                      );
+                    },
+                    child: ListTile(
+                      //   contentPadding: EdgeInsets.zero,
+                      dense: true,
 
-                return GestureDetector(
-                  onTap: () {
-                    log("music list tapped");
-                    context.read<TrackProvider>().setSongAndPlay(searchContent);
-                  },
-                  child: ListTile(
-                    dense: true,
-                    leading: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(7),
+                        child: Image.network(
+                          searchContent.artwork!,
+                          fit: BoxFit.cover,
+                          height: 50,
+                          width: 50,
+                        ),
                       ),
-                      height: 50,
-                      width: 50,
-                      child: Image.network(
-                        searchContent.artwork!,
-                        fit: BoxFit.cover,
+                      title: Text(
+                        searchContent.title,
+                        maxLines: 1,
+
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      subtitle: Text(
+                        searchContent.artist,
+                        style: TextStyle(color: Colors.grey),
                       ),
                     ),
-                    title: Text(
-                      searchContent.title,
-                      maxLines: 1,
-
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
+                  );
+                },
+              )
+            : Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 7,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        log("Recent songs :${recentResult.length}");
+                        for (TrackModel i in recentResult) {
+                          log(i.title);
+                          log(i.id);
+                          log("----------");
+                        }
+                      },
+                      child: Text(
+                        "Recents",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                    subtitle: Text(searchContent.artist, style: TextStyle()),
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: player.recentSongs().length,
+                        itemBuilder: (context, index) {
+                          final recentContent = player.recentSongs()[index];
+
+                          return GestureDetector(
+                            onTap: () {
+                              context.read<TrackProvider>().setSongAndPlay(
+                                TrackModel(
+                                  id: recentContent['id'] ?? "",
+                                  title: recentContent['title'] ?? "",
+                                  artist: recentContent['artist'] ?? "",
+                                  duration: recentContent['duration'] ?? "",
+                                  isStreamable:
+                                      recentContent['isStreamable'] ?? "",
+                                  artwork: recentContent['artwork'] ?? "",
+                                  streamUrl: recentContent['streamUrl'] ?? "",
+                                ),
+                              );
+                            },
+                            child: ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              dense: true,
+                              leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(7),
+                                child: Image.network(
+                                  recentContent['artwork'],
+                                  fit: BoxFit.cover,
+                                  height: 50,
+                                  width: 50,
+                                ),
+                              ),
+                              title: Text(
+                                recentContent['title'],
+                                maxLines: 1,
+
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              subtitle: Text(
+                                recentContent['artist'],
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
       ),
     );
   }
