@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:palette_generator_plus/palette_generator_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:sf/providers/track_provider.dart';
 import 'package:sf/track_model.dart';
@@ -24,16 +25,53 @@ class _PlayerScreenState extends State<PlayerScreen> {
     return "$minutes:${seconds.toString().padLeft(2, '0')}";
   }
 
+  Color backgroundColor = Colors.black;
+
+  Future<void> getBackgroundColor() async {
+    final palette = await PaletteGenerator.fromImageProvider(
+      NetworkImage(widget.song.artwork!),
+    );
+    Color selectedColor = Colors.blueGrey;
+
+    final colors = palette.colors.toList();
+
+    for (final color in colors) {
+      final lightness = HSLColor.fromColor(color).lightness;
+
+      if (lightness > 0.25) {
+        selectedColor = color;
+        break;
+      }
+    }
+
+    setState(() {
+      backgroundColor = selectedColor;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    getBackgroundColor();
+  }
+
   @override
   Widget build(BuildContext context) {
     final tracker = context.watch<TrackProvider>();
     final player = tracker.player;
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 83, 81, 81),
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.black,
+
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(
+          color: const Color.fromARGB(255, 255, 255, 255),
+        ),
         titleSpacing: 0,
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.transparent,
+
         centerTitle: true,
         title: Text(
           "Recommended for you",
@@ -49,7 +87,18 @@ class _PlayerScreenState extends State<PlayerScreen> {
       body: Hero(
         tag: widget.song.id,
         curve: Curves.easeInToLinear,
-        child: Container(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 700),
+          curve: Curves.easeInOut,
+          height: double.infinity,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [backgroundColor, Colors.black],
+            ),
+          ),
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 5),
@@ -79,8 +128,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              widget.song.title.length > 18
-                                  ? widget.song.title.substring(0, 18) + "..."
+                              widget.song.title.length > 13
+                                  ? widget.song.title.substring(0, 13) + "..."
                                   : widget.song.title,
                               maxLines: 1,
                               overflow: TextOverflow.fade,

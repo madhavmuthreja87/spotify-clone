@@ -39,6 +39,7 @@ dependencies:
   provider:
   hive: 
   hive_flutter: 
+  palette_generator_plus: 
 
 dev_dependencies:
   flutter_test:
