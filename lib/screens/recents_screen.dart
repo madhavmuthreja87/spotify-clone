@@ -65,44 +65,50 @@ class _RecentsScreenState extends State<RecentsScreen> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         titleSpacing: 0,
-        backgroundColor: Colors.black,
-        title: SizedBox(
-          width: MediaQuery.sizeOf(context).width,
-          height: 44,
-          child: TextField(
-            controller: searchController,
-            cursorColor: Colors.green,
-            autofocus: true,
-            selectionControls: EmptyTextSelectionControls(),
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 17,
-              fontWeight: FontWeight.w500,
-            ),
-            decoration: InputDecoration(
-              border: OutlineInputBorder(borderSide: BorderSide.none),
-
-              filled: true,
-              hint: Text(
-                "What do you want to listen to?",
-                style: TextStyle(
-                  fontSize: 15,
-                  color: const Color.fromARGB(255, 224, 224, 224),
-                  fontWeight: FontWeight.w600,
-                ),
+        backgroundColor: const Color.fromARGB(36, 247, 247, 247),
+        title: Padding(
+          padding: const EdgeInsets.only(right: 18.0),
+          child: SizedBox(
+            width: MediaQuery.sizeOf(context).width,
+            height: 34,
+            child: TextField(
+              controller: searchController,
+              cursorColor: Colors.green,
+              autofocus: true,
+              selectionControls: EmptyTextSelectionControls(),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
               ),
-              fillColor: const Color.fromARGB(255, 106, 105, 105),
-            ),
-            onSubmitted: (value) {
-              // if (value.isEmpty) {
-              //   setState(() {
-              //     searchResult = [];
-              //   });
-              //   return;
-              // }
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(30),
+                ),
 
-              searchSongs(value);
-            },
+                filled: true,
+                hint: Text(
+                  "What do you want to listen to?",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: const Color.fromARGB(176, 224, 224, 224),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                fillColor: const Color.fromARGB(108, 106, 105, 105),
+              ),
+              onSubmitted: (value) {
+                // if (value.isEmpty) {
+                //   setState(() {
+                //     searchResult = [];
+                //   });
+                //   return;
+                // }
+
+                searchSongs(value);
+              },
+            ),
           ),
         ),
       ),

@@ -38,6 +38,7 @@ class NavigationBar extends StatefulWidget {
 }
 
 class _MyAppState extends State<NavigationBar> {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   List<Widget> screen = const [
     HomeScreen(),
     SearchScreen(),
@@ -49,23 +50,30 @@ class _MyAppState extends State<NavigationBar> {
   Widget build(BuildContext context) {
     final player = context.watch<TrackProvider>();
     return Scaffold(
-      body: screen[currentIndex],
+      body: Navigator(
+        key: navigatorKey,
+        onGenerateRoute: (settings) {
+          return MaterialPageRoute(builder: (_) => screen[currentIndex]);
+        },
+      ),
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (player.currentSong != null)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: MiniPlayer(
-                song: player.currentSong!,
+              child: Material(
+                child: MiniPlayer(
+                  song: player.currentSong!,
 
-                onPlayPause: () {
-                  if (player.isPlaying) {
-                    player.pause();
-                  } else
-                    player.resume();
-                },
-                onTap: () {},
+                  onPlayPause: () {
+                    if (player.isPlaying) {
+                      player.pause();
+                    } else
+                      player.resume();
+                  },
+                  onTap: () {},
+                ),
               ),
             ),
           BottomNavigationBar(
@@ -80,6 +88,11 @@ class _MyAppState extends State<NavigationBar> {
               setState(() {
                 currentIndex = value;
               });
+
+              navigatorKey.currentState!.pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => screen[value]),
+                (route) => false,
+              );
             },
             items: [
               BottomNavigationBarItem(
