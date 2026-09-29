@@ -87,6 +87,11 @@ class TrackProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> removeAllrecentSong() async {
+    await recentBox.clear();
+    notifyListeners();
+  }
+
   Future<void> saveLikedSongs(TrackModel song) async {
     await likedBox.put(song.id, {
       'id': song.id,

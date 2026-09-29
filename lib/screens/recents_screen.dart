@@ -61,7 +61,7 @@ class _RecentsScreenState extends State<RecentsScreen> {
   Widget build(BuildContext context) {
     final player = context.watch<TrackProvider>();
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color(0xFF121212),
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         titleSpacing: 0,
@@ -159,7 +159,8 @@ class _RecentsScreenState extends State<RecentsScreen> {
                   );
                 },
               )
-            : Padding(
+            : player.recentSongs().length != 0
+            ? Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16.0,
                   vertical: 7,
@@ -188,10 +189,50 @@ class _RecentsScreenState extends State<RecentsScreen> {
                     Expanded(
                       child: ListView.builder(
                         shrinkWrap: true,
-                        itemCount: player.recentSongs().length,
+                        itemCount: player.recentSongs().length + 1,
                         itemBuilder: (context, index) {
+                          if (index == player.recentSongs().length) {
+                            return Column(
+                              children: [
+                                const SizedBox(height: 25),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        player.removeAllrecentSong();
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 7,
+                                          vertical: 7,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            20,
+                                          ),
+                                          border: Border.all(
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          "Clear recent searches",
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 30),
+                              ],
+                            );
+                          }
                           final recentContent = player.recentSongs()[index];
-
                           bool isLiked = player.likedSongs().any(
                             (song) => song['id'] == recentContent['id'],
                           );
@@ -304,6 +345,29 @@ class _RecentsScreenState extends State<RecentsScreen> {
                       ),
                     ),
                   ],
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Play what you love",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 21,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        "Search for artists, songs, playlists, podcasts and more.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.grey, fontSize: 15.5),
+                      ),
+                    ],
+                  ),
                 ),
               ),
       ),

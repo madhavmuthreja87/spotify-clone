@@ -280,7 +280,7 @@ class _LikedSongsState extends State<LikedSongs> {
                         ),
                         trailing: Icon(
                           Icons.more_vert,
-                          size: 25,
+                          size: 26,
                           color: Colors.grey,
                         ),
                       ),
