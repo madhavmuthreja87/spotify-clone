@@ -9,7 +9,7 @@ class AudisApi {
 
   Future<List<TrackModel>> getTrendingTracks() async {
     log("Get trending songs called");
-    final url = Uri.parse('$baseUrl/tracks/trending?limit=20');
+    final url = Uri.parse('$baseUrl/tracks/trending?limit=10');
     final response = await http.get(url);
 
     if (response.statusCode != 200) {
@@ -26,7 +26,7 @@ class AudisApi {
     log("Searching songs called");
 
     final url = Uri.parse('$baseUrl/tracks/search')
-        .replace(queryParameters: {'query': query, 'limit': '40'});
+        .replace(queryParameters: {'query': query, 'limit': '60'});
 
     final response = await http.get(url);
 

@@ -278,6 +278,11 @@ class _LikedSongsState extends State<LikedSongs> {
                           likedSong['artist'],
                           style: TextStyle(color: Colors.grey),
                         ),
+                        trailing: Icon(
+                          Icons.more_vert,
+                          size: 25,
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
                   );

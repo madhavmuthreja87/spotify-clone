@@ -82,6 +82,11 @@ class TrackProvider extends ChangeNotifier {
     return songs;
   }
 
+  Future<void> removeRecentSong(String songID) async {
+    await recentBox.delete(songID);
+    notifyListeners();
+  }
+
   Future<void> saveLikedSongs(TrackModel song) async {
     await likedBox.put(song.id, {
       'id': song.id,
@@ -100,6 +105,11 @@ class TrackProvider extends ChangeNotifier {
         .toList();
 
     return songs;
+  }
+
+  Future<void> removeLikedSong(String songID) async {
+    await likedBox.delete(songID);
+    notifyListeners();
   }
 
   @override

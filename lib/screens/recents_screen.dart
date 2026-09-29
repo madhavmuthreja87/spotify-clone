@@ -175,16 +175,29 @@ class _RecentsScreenState extends State<RecentsScreen> {
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
                     Expanded(
                       child: ListView.builder(
+                        shrinkWrap: true,
                         itemCount: player.recentSongs().length,
                         itemBuilder: (context, index) {
                           final recentContent = player.recentSongs()[index];
 
+                          bool isLiked = player.likedSongs().any(
+                            (song) => song['id'] == recentContent['id'],
+                          );
+                          TrackModel currentTrack = TrackModel(
+                            id: recentContent['id'] ?? "",
+                            title: recentContent['title'] ?? "",
+                            artist: recentContent['artist'] ?? "",
+                            duration: recentContent['duration'] ?? "",
+                            isStreamable: recentContent['isStreamable'] ?? "",
+                            artwork: recentContent['artwork'] ?? "",
+                            streamUrl: recentContent['streamUrl'] ?? "",
+                          );
                           return GestureDetector(
                             onTap: () {
                               context.read<TrackProvider>().setSongAndPlay(
@@ -208,8 +221,8 @@ class _RecentsScreenState extends State<RecentsScreen> {
                                 child: Image.network(
                                   recentContent['artwork'],
                                   fit: BoxFit.cover,
-                                  height: 50,
-                                  width: 50,
+                                  height: 47,
+                                  width: 47,
                                 ),
                               ),
                               title: Text(
@@ -218,13 +231,66 @@ class _RecentsScreenState extends State<RecentsScreen> {
 
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 15,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                               subtitle: Text(
                                 recentContent['artist'],
                                 style: TextStyle(color: Colors.grey),
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const SizedBox(width: 8),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      log("Like the song pressed");
+
+                                      if (!isLiked)
+                                        await player.saveLikedSongs(
+                                          currentTrack,
+                                        );
+                                      else
+                                        await player.removeLikedSong(
+                                          currentTrack.id,
+                                        );
+
+                                      setState(() {});
+
+                                      log(
+                                        player.likedSongs().length.toString(),
+                                      );
+                                    },
+                                    child: !isLiked
+                                        ? Icon(
+                                            Icons.add_circle_outline,
+                                            color: Colors.grey,
+                                            size: 20,
+                                          )
+                                        : Icon(
+                                            Icons.check_circle,
+                                            color: const Color.fromARGB(
+                                              255,
+                                              92,
+                                              214,
+                                              96,
+                                            ),
+                                            size: 20,
+                                          ),
+                                  ),
+                                  const SizedBox(width: 25),
+                                  GestureDetector(
+                                    onTap: () {
+                                      player.removeRecentSong(currentTrack.id);
+                                    },
+                                    child: Icon(
+                                      Icons.close,
+                                      color: Colors.grey,
+                                      size: 26,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           );

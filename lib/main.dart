@@ -44,7 +44,7 @@ class _MyAppState extends State<NavigationBar> {
     LibraryScreen(),
     SettingsScreen(),
   ];
-  int currentIndex = 2;
+  int currentIndex = 1;
   @override
   Widget build(BuildContext context) {
     final player = context.watch<TrackProvider>();

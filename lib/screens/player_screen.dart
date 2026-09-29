@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:palette_generator_plus/palette_generator_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:sf/providers/track_provider.dart';
@@ -61,6 +62,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
   Widget build(BuildContext context) {
     final tracker = context.watch<TrackProvider>();
     final player = tracker.player;
+    bool isLiked = tracker.likedSongs().any(
+      (song) => song['id'] == widget.song.id,
+    );
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,
@@ -167,19 +171,34 @@ class _PlayerScreenState extends State<PlayerScreen> {
                               size: 40,
                             ),
                             const SizedBox(width: 10),
+
                             GestureDetector(
                               onTap: () async {
                                 log("Like the song pressed");
 
-                                await tracker.saveLikedSongs(widget.song);
+                                if (!isLiked)
+                                  await tracker.saveLikedSongs(widget.song);
+                                else
+                                  await tracker.removeLikedSong(widget.song.id);
+
+                                setState(() {});
 
                                 log(tracker.likedSongs().length.toString());
                               },
-                              child: Icon(
-                                Icons.add_circle_outline_rounded,
-                                color: Colors.white,
-                                size: 37,
-                              ),
+                              child: isLiked
+                                  ? Lottie.asset(
+                                      'assets/animations/Done.json',
+
+                                      width: 60,
+                                      height: 60,
+
+                                      repeat: false,
+                                    )
+                                  : const Icon(
+                                      Icons.add_circle_outline_rounded,
+                                      color: Colors.white,
+                                      size: 37,
+                                    ),
                             ),
                           ],
                         ),
