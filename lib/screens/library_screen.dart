@@ -148,14 +148,39 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     shrinkWrap: true,
                     children: [
                       GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LikedSongs(),
-                            ),
-                          );
-                        },
+                        onTap: () => Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (
+                              context,
+                              animation,
+                              secondaryAnimation,
+                            ) => const LikedSongs(),
+                            transitionsBuilder:
+                                (
+                                  context,
+                                  animation,
+                                  secondaryAnimation,
+                                  child,
+                                ) {
+                                  final curvedAnimation = CurvedAnimation(
+                                    parent: animation,
+                                    curve: Curves.easeInQuad,
+                                  );
+
+                                  return FadeTransition(
+                                    opacity: curvedAnimation,
+                                    child: ScaleTransition(
+                                      scale: Tween<double>(
+                                        begin: 0.95,
+                                        end: 1.0,
+                                      ).animate(curvedAnimation),
+                                      child: child,
+                                    ),
+                                  );
+                                },
+                          ),
+                        ),
                         child: ListTile(
                           contentPadding: EdgeInsets.zero,
 
