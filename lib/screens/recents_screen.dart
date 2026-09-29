@@ -200,7 +200,56 @@ class _RecentsScreenState extends State<RecentsScreen> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        player.removeAllrecentSong();
+                                        showAdaptiveDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog.adaptive(
+                                              backgroundColor: const Color(
+                                                0xFF121212,
+                                              ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadiusGeometry.circular(
+                                                      8,
+                                                    ),
+                                              ),
+                                              content: Text(
+                                                "Are you sure want to clear your recent searches?",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text(
+                                                    "CANCEL",
+                                                    style: TextStyle(
+                                                      color: Colors.green,
+                                                    ),
+                                                  ),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () async {
+                                                    await player
+                                                        .removeAllrecentSong();
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text(
+                                                    "CLEAR",
+                                                    style: TextStyle(
+                                                      color: Colors.green,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
                                       },
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
