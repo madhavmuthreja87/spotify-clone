@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sf/audis_api.dart';
+import 'package:sf/screens/liked_songs.dart';
 
 class LibraryScreen extends StatefulWidget {
   const new({super.key});
@@ -146,44 +147,59 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   ListView(
                     shrinkWrap: true,
                     children: [
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-
-                        leading: Container(
-                          height: 55,
-                          width: 55,
-
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [Colors.deepPurple, Colors.white],
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LikedSongs(),
                             ),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Center(
-                            child: Icon(Icons.favorite, color: Colors.white),
-                          ),
-                        ),
-                        title: Text(
-                          "Liked Songs",
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                        subtitle: Row(
-                          children: [
-                            Icon(
-                              Icons.push_pin_rounded,
-                              color: Colors.green,
-                              size: 20,
-                            ),
-                            Text(
-                              " Playlist • Username",
-                              style: TextStyle(
-                                color: const Color.fromARGB(255, 159, 159, 159),
-                                fontSize: 13,
+                          );
+                        },
+                        child: ListTile(
+                          contentPadding: EdgeInsets.zero,
+
+                          leading: Container(
+                            height: 55,
+                            width: 55,
+
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [Colors.deepPurple, Colors.white],
                               ),
+                              borderRadius: BorderRadius.circular(5),
                             ),
-                          ],
+                            child: Center(
+                              child: Icon(Icons.favorite, color: Colors.white),
+                            ),
+                          ),
+                          title: Text(
+                            "Liked Songs",
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
+                          subtitle: Row(
+                            children: [
+                              Icon(
+                                Icons.push_pin_rounded,
+                                color: Colors.green,
+                                size: 20,
+                              ),
+                              Text(
+                                " Playlist • Username",
+                                style: TextStyle(
+                                  color: const Color.fromARGB(
+                                    255,
+                                    159,
+                                    159,
+                                    159,
+                                  ),
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       ListTile(

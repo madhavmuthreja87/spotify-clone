@@ -14,6 +14,7 @@ void main() async {
 
   await Hive.initFlutter();
   await Hive.openBox("recentSongs");
+  await Hive.openBox('likedSongs');
 
   runApp(
     ChangeNotifierProvider(create: (_) => TrackProvider(), child: MyApp()),
@@ -43,7 +44,7 @@ class _MyAppState extends State<NavigationBar> {
     LibraryScreen(),
     SettingsScreen(),
   ];
-  int currentIndex = 1;
+  int currentIndex = 2;
   @override
   Widget build(BuildContext context) {
     final player = context.watch<TrackProvider>();

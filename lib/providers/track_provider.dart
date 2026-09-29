@@ -10,6 +10,7 @@ class TrackProvider extends ChangeNotifier {
   bool isPlaying = false;
 
   final Box recentBox = Hive.box("recentSongs");
+  final Box likedBox = Hive.box("likedSongs");
 
   TrackProvider() {
     player.playingStream.listen((playing) {
@@ -77,6 +78,26 @@ class TrackProvider extends ChangeNotifier {
         .toList();
 
     songs.sort((a, b) => b['playedAt'].compareTo(a['playedAt']));
+
+    return songs;
+  }
+
+  Future<void> saveLikedSongs(TrackModel song) async {
+    await likedBox.put(song.id, {
+      'id': song.id,
+      'title': song.title,
+      'artist': song.artist,
+      'duration': song.duration,
+      'is_streamable': song.isStreamable,
+      'artwork': song.artwork,
+      'streamUrl': song.streamUrl,
+    });
+  }
+
+  List<Map> likedSongs() {
+    final songs = likedBox.values
+        .map((song) => Map<String, dynamic>.from(song))
+        .toList();
 
     return songs;
   }

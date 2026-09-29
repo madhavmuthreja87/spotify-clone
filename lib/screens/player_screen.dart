@@ -167,10 +167,19 @@ class _PlayerScreenState extends State<PlayerScreen> {
                               size: 40,
                             ),
                             const SizedBox(width: 10),
-                            Icon(
-                              Icons.add_circle_outline_rounded,
-                              color: Colors.white,
-                              size: 37,
+                            GestureDetector(
+                              onTap: () async {
+                                log("Like the song pressed");
+
+                                await tracker.saveLikedSongs(widget.song);
+
+                                log(tracker.likedSongs().length.toString());
+                              },
+                              child: Icon(
+                                Icons.add_circle_outline_rounded,
+                                color: Colors.white,
+                                size: 37,
+                              ),
                             ),
                           ],
                         ),
