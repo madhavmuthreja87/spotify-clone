@@ -18,7 +18,8 @@ class PlayerScreen extends StatefulWidget {
   State<PlayerScreen> createState() => _PlayerScreenState();
 }
 
-class _PlayerScreenState extends State<PlayerScreen> {
+class _PlayerScreenState extends State<PlayerScreen>
+    with SingleTickerProviderStateMixin {
   String FormatDuration(Duration duration) {
     final minutes = duration.inMinutes;
     final seconds = duration.inSeconds.remainder(60);
@@ -189,10 +190,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
                                   ? Lottie.asset(
                                       'assets/animations/Done.json',
 
-                                      width: 60,
-                                      height: 60,
-
-                                      repeat: false,
+                                      width: 50,
+                                      height: 50,
                                     )
                                   : const Icon(
                                       Icons.add_circle_outline_rounded,
