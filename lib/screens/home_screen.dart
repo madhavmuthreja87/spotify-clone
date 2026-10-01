@@ -490,7 +490,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       final songs = snapshot.data!;
 
                       return SizedBox(
-                        height: 210,
+                        height: MediaQuery.sizeOf(context).height / 3.5,
 
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
@@ -499,8 +499,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             final song = songs[index];
 
                             return Container(
-                              height: 210,
-                              width: 150,
+                              height: MediaQuery.sizeOf(context).height / 3.8,
+                              width: MediaQuery.sizeOf(context).width / 2.5,
+
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -517,6 +518,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       width: 150,
                                     ),
                                   ),
+                                  const SizedBox(height: 8),
                                   Text(
                                     song.title,
                                     maxLines: 1,

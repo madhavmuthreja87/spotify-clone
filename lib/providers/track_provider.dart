@@ -11,6 +11,7 @@ class TrackProvider extends ChangeNotifier {
 
   final Box recentBox = Hive.box("recentSongs");
   final Box likedBox = Hive.box("likedSongs");
+  final Box playlistBox = Hive.box("playlistBox");
 
   TrackProvider() {
     player.playingStream.listen((playing) {
@@ -115,6 +116,53 @@ class TrackProvider extends ChangeNotifier {
   Future<void> removeLikedSong(String songID) async {
     await likedBox.delete(songID);
     notifyListeners();
+  }
+
+  //PlayList creation with putting songs into it
+  // final List<Map<String, List<TrackModel>?>> playlists = [];
+
+  Future<void> createPlaylist(String pname) async {
+    await playlistBox.put(pname, []);
+
+    // playlists.add({pname: []});
+
+    notifyListeners();
+  }
+
+  Future<void> removePlaylist(String pname) async {
+    await playlistBox.delete(pname);
+
+    notifyListeners();
+  }
+
+  Future<void> addToPlaylist(String pname, TrackModel tm) async {
+    final existingPlaylist = playlistBox.get(
+      pname,
+      defaultValue: <TrackModel>[],
+    );
+
+    existingPlaylist.add({
+      'id': tm.id,
+      'title': tm.title,
+      'artist': tm.artist,
+      'duration': tm.duration,
+      'is_streamable': tm.isStreamable,
+      'artwork': tm.artwork,
+      'streamUrl': tm.streamUrl,
+    });
+
+    await playlistBox.put(pname, existingPlaylist);
+    notifyListeners();
+  }
+
+  List<String> allplaylistsName() {
+    final playlist = playlistBox.keys.cast<String>().toList();
+
+    return playlist;
+  }
+
+  List<TrackModel> songsOfPlaylist(String pname) {
+    return playlistBox.get(pname, defaultValue: <TrackModel>[]);
   }
 
   @override

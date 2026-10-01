@@ -15,6 +15,7 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox("recentSongs");
   await Hive.openBox('likedSongs');
+  await Hive.openBox("playlistBox");
 
   runApp(
     ChangeNotifierProvider(create: (_) => TrackProvider(), child: MyApp()),

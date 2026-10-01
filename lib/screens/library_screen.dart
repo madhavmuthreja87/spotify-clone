@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:sf/audis_api.dart';
+import 'package:sf/screens/create_playlist.dart';
 import 'package:sf/screens/liked_songs.dart';
 
 class LibraryScreen extends StatefulWidget {
@@ -49,10 +52,21 @@ class _LibraryScreenState extends State<LibraryScreen> {
                                   color: Colors.white,
                                 ),
                                 const SizedBox(width: 10),
-                                Icon(
-                                  size: 40,
-                                  Icons.add_rounded,
-                                  color: Colors.white,
+                                GestureDetector(
+                                  onTap: () => {
+                                    log("create playlist icon tapped"),
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CreatePlaylist(),
+                                      ),
+                                    ),
+                                  },
+                                  child: Icon(
+                                    size: 40,
+                                    Icons.add_rounded,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ],
                             ),
