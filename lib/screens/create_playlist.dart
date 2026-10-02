@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sf/providers/track_provider.dart';
+import 'package:sf/screens/playlist_home.dart';
 
 class CreatePlaylist extends StatefulWidget {
   const new({super.key});
@@ -71,7 +72,9 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                         height: 45,
                         width: 90,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
 
                           child: Text(
                             "Cancel",
@@ -99,6 +102,43 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                               playlistnamecontroller.text,
                             );
                             log(tracker.allplaylistsName().length.toString());
+                            Navigator.pushReplacement(
+                              context,
+                              PageRouteBuilder(
+                                transitionDuration: const Duration(
+                                  milliseconds: 800,
+                                ),
+                                reverseTransitionDuration: Duration.zero,
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) {
+                                      return PlaylistHome(
+                                        pname: playlistnamecontroller.text,
+                                      );
+                                    },
+                                transitionsBuilder:
+                                    (
+                                      context,
+                                      animation,
+                                      secondaryAnimation,
+                                      child,
+                                    ) {
+                                      final tween =
+                                          Tween<Offset>(
+                                            begin: const Offset(0, -1),
+                                            end: Offset.zero,
+                                          ).chain(
+                                            CurveTween(
+                                              curve: Curves.easeOutCubic,
+                                            ),
+                                          );
+
+                                      return SlideTransition(
+                                        position: animation.drive(tween),
+                                        child: child,
+                                      );
+                                    },
+                              ),
+                            );
                           },
                           child: Text(
                             "Create",
