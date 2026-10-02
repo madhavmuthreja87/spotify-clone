@@ -288,6 +288,7 @@ class _LikedSongsState extends State<LikedSongs> {
                   );
                 },
               ),
+              const SizedBox(height: 115),
             ],
           ),
         ),

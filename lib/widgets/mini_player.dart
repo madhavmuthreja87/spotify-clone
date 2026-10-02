@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:palette_generator_plus/palette_generator_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:sf/providers/track_provider.dart';
 import 'package:sf/screens/player_screen.dart';
@@ -25,6 +26,47 @@ class MiniPlayer extends StatefulWidget {
 }
 
 class _MiniPlayerState extends State<MiniPlayer> {
+  Color backgroundColor = const Color(0xFF212121);
+
+  Future<void> getBackgroundColor() async {
+    final palette = await PaletteGenerator.fromImageProvider(
+      NetworkImage(widget.song.artwork!),
+    );
+    Color selectedColor = Colors.blueGrey;
+
+    final colors = palette.colors.toList();
+
+    for (final color in colors) {
+      final lightness = HSLColor.fromColor(color).lightness;
+
+      if (lightness > 0.25) {
+        selectedColor = color;
+        break;
+      }
+    }
+
+    setState(() {
+      backgroundColor = selectedColor;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    getBackgroundColor();
+  }
+
+  @override
+  void didUpdateWidget(covariant MiniPlayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.song.id != widget.song.id) {
+      getBackgroundColor();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final tracker = context.watch<TrackProvider>();
@@ -44,35 +86,41 @@ class _MiniPlayerState extends State<MiniPlayer> {
       },
       child: Hero(
         tag: widget.song.id,
-        child: Container(
-          height: 58,
-          width: MediaQuery.sizeOf(context).width,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
+          height: 54,
+          width: MediaQuery.sizeOf(context).width / 1.09,
           decoration: BoxDecoration(
-            color: const Color.fromARGB(248, 71, 39, 39),
-            borderRadius: BorderRadius.circular(10),
+            color: backgroundColor.withValues(alpha: 1),
+            //     gradient: LinearGradient(colors: [backgroundColor.withValues()]),
+            borderRadius: BorderRadius.circular(8),
           ),
           padding: EdgeInsets.symmetric(vertical: 0, horizontal: 6),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 4.0),
+                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(6),
                           child: Image.network(
                             widget.song.artwork ?? "",
                             fit: BoxFit.cover,
-                            height: 48,
-                            width: 48,
+                            height: 40,
+                            width: 40,
                           ),
                         ),
                         const SizedBox(width: 8),
                         Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text(
                               widget.song.title.length > 20
@@ -82,11 +130,12 @@ class _MiniPlayerState extends State<MiniPlayer> {
                               overflow: TextOverflow.fade,
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
+                                fontSize: 12.7,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
-                            Text(widget.song.artist),
+                            // Text(widget.song.artist),
+                            const SizedBox(height: 8),
                           ],
                         ),
                       ],
@@ -115,44 +164,51 @@ class _MiniPlayerState extends State<MiniPlayer> {
                   ],
                 ),
               ),
-              SizedBox(
-                width: double.infinity,
-                child: StreamBuilder<Duration>(
-                  stream: player.positionStream,
-                  builder: (context, snapshot) {
-                    final position = snapshot.data ?? Duration.zero;
-                    final duration = player.duration ?? Duration.zero;
-                    return Column(
-                      children: [
-                        SliderTheme(
-                          data: SliderTheme.of(context).copyWith(
-                            overlayShape: SliderComponentShape.noOverlay,
-                            trackShape: const RoundedRectSliderTrackShape(),
-                            thumbColor: Colors.white,
-                            inactiveTrackColor: Colors.grey,
-                            activeTrackColor: Colors.white,
-                            trackHeight: 1.6,
 
-                            thumbShape: const RoundSliderThumbShape(
-                              enabledThumbRadius: 0,
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 3.0,
+                  vertical: 0,
+                ),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: StreamBuilder<Duration>(
+                    stream: player.positionStream,
+                    builder: (context, snapshot) {
+                      final position = snapshot.data ?? Duration.zero;
+                      final duration = player.duration ?? Duration.zero;
+                      return Column(
+                        children: [
+                          SliderTheme(
+                            data: SliderTheme.of(context).copyWith(
+                              overlayShape: SliderComponentShape.noOverlay,
+                              trackShape: const RoundedRectSliderTrackShape(),
+                              thumbColor: Colors.white,
+                              inactiveTrackColor: Colors.grey,
+                              activeTrackColor: Colors.white,
+                              trackHeight: 1.6,
+
+                              thumbShape: const RoundSliderThumbShape(
+                                enabledThumbRadius: 0,
+                              ),
+                            ),
+
+                            child: Slider(
+                              min: 0,
+                              max: duration.inSeconds.toDouble(),
+                              value: position.inSeconds.toDouble().clamp(
+                                0,
+                                duration.inSeconds.toDouble(),
+                              ),
+                              onChanged: (value) {
+                                player.seek(Duration(seconds: value.toInt()));
+                              },
                             ),
                           ),
-
-                          child: Slider(
-                            min: 0,
-                            max: duration.inSeconds.toDouble(),
-                            value: position.inSeconds.toDouble().clamp(
-                              0,
-                              duration.inSeconds.toDouble(),
-                            ),
-                            onChanged: (value) {
-                              player.seek(Duration(seconds: value.toInt()));
-                            },
-                          ),
-                        ),
-                      ],
-                    );
-                  },
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ),
             ],

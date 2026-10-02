@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Container(
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.only(left: 12, top: 6, bottom: 6),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,144 +121,147 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
 
                   const SizedBox(height: 10),
-                  GridView.count(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 8,
-                    crossAxisSpacing: 8,
-                    childAspectRatio: 3.45,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(81, 157, 155, 155),
-                          borderRadius: BorderRadius.circular(5),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: GridView.count(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 8,
+                      crossAxisSpacing: 8,
+                      childAspectRatio: 3.45,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(81, 157, 155, 155),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          // child: Row(
+                          //   children: [
+                          //     Container(child: Text("Image")),
+                          //     Text(
+                          //       "Hello",
+                          //       style: TextStyle(color: Colors.white),
+                          //     ),
+                          //   ],
+                          // ),
+                          // child: ListTile(title: Container(child: Text("Image"),sub)),
                         ),
-                        // child: Row(
-                        //   children: [
-                        //     Container(child: Text("Image")),
-                        //     Text(
-                        //       "Hello",
-                        //       style: TextStyle(color: Colors.white),
-                        //     ),
-                        //   ],
-                        // ),
-                        // child: ListTile(title: Container(child: Text("Image"),sub)),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(7),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(child: Text("Image")),
+                              Text(
+                                "Hello",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
                         ),
-                        child: Row(
-                          children: [
-                            Container(child: Text("Image")),
-                            Text(
-                              "Hello",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(child: Text("Image")),
+                              Text(
+                                "Hello",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(7),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(child: Text("Image")),
+                              Text(
+                                "Hello",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
                         ),
-                        child: Row(
-                          children: [
-                            Container(child: Text("Image")),
-                            Text(
-                              "Hello",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(child: Text("Image")),
+                              Text(
+                                "Hello",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(7),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(child: Text("Image")),
+                              Text(
+                                "Hello",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
                         ),
-                        child: Row(
-                          children: [
-                            Container(child: Text("Image")),
-                            Text(
-                              "Hello",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(child: Text("Image")),
+                              Text(
+                                "Hello",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(7),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(child: Text("Image")),
+                              Text(
+                                "Hello",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
                         ),
-                        child: Row(
-                          children: [
-                            Container(child: Text("Image")),
-                            Text(
-                              "Hello",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(7),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(child: Text("Image")),
-                            Text(
-                              "Hello",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(7),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(child: Text("Image")),
-                            Text(
-                              "Hello",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(7),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(child: Text("Image")),
-                            Text(
-                              "Hello",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 30),
                   Text(
                     "Just back in",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 25,
-                      fontWeight: FontWeight.w800,
+                      fontSize: 21,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                   SizedBox(
@@ -269,7 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemBuilder: (context, index) {
                         Map<dynamic, dynamic> element = justBackIn[index];
                         return Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.only(right: 6, top: 6),
                           child: GestureDetector(
                             onTap: () {
                               context.read<TrackProvider>().setSongAndPlay(
@@ -467,11 +470,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     "Recommended for today",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 25,
-                      fontWeight: FontWeight.w800,
+                      fontSize: 21,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-
+                  const SizedBox(height: 2),
                   FutureBuilder<List<TrackModel>>(
                     future: AudisApi().getTrendingTracks(),
 

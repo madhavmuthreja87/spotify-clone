@@ -192,6 +192,7 @@ class _PlayerScreenState extends State<PlayerScreen>
 
                                       width: 50,
                                       height: 50,
+                                      repeat: false,
                                     )
                                   : const Icon(
                                       Icons.add_circle_outline_rounded,
