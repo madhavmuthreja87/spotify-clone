@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sf/audis_api.dart';
+import 'package:sf/providers/track_provider.dart';
 import 'package:sf/screens/create_playlist.dart';
 import 'package:sf/screens/liked_songs.dart';
 
@@ -15,6 +17,7 @@ class LibraryScreen extends StatefulWidget {
 class _LibraryScreenState extends State<LibraryScreen> {
   @override
   Widget build(BuildContext context) {
+    final tracker = context.read<TrackProvider>();
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
       body: Container(
@@ -199,8 +202,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
                           contentPadding: EdgeInsets.zero,
 
                           leading: Container(
-                            height: 55,
-                            width: 55,
+                            height: 60,
+                            width: 60,
 
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
@@ -241,73 +244,115 @@ class _LibraryScreenState extends State<LibraryScreen> {
                           ),
                         ),
                       ),
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        hoverColor: Colors.green,
-                        leading: CircleAvatar(
-                          child: Icon(Icons.person),
-                          radius: 25,
-                        ),
-                        title: Text(
-                          "Karan Aujhla",
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                        subtitle: Row(
-                          children: [
-                            Text(
-                              "Artist",
-                              style: TextStyle(
-                                color: const Color.fromARGB(255, 159, 159, 159),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        hoverColor: Colors.green,
-                        leading: CircleAvatar(
-                          child: Icon(Icons.person_2),
-                          radius: 25,
-                        ),
-                        title: Text(
-                          "Paradox",
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                        subtitle: Row(
-                          children: [
-                            Text(
-                              "Artist",
-                              style: TextStyle(
-                                color: const Color.fromARGB(255, 159, 159, 159),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        hoverColor: Colors.green,
-                        leading: CircleAvatar(
-                          child: Icon(Icons.person_3),
-                          radius: 25,
-                        ),
-                        title: Text(
-                          "Shubh",
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                        subtitle: Row(
-                          children: [
-                            Text(
-                              "Artist",
-                              style: TextStyle(
-                                color: const Color.fromARGB(255, 159, 159, 159),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                     ],
+                  ),
+                  //
+                  ListView.builder(
+                    itemCount: tracker.allplaylistsName().length,
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+
+                    itemBuilder: (context, index) {
+                      final playlistname = tracker.allplaylistsName()[index];
+
+                      return ListTile(
+                        contentPadding: EdgeInsets.zero,
+
+                        leading: Container(
+                          height: 62,
+                          width: 62,
+
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Center(
+                            child: Icon(Icons.headphones, color: Colors.white),
+                          ),
+                        ),
+                        title: Text(
+                          playlistname,
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                        subtitle: Row(
+                          children: [
+                            Text(
+                              " Playlist • Username",
+                              style: TextStyle(
+                                color: const Color.fromARGB(255, 159, 159, 159),
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    hoverColor: Colors.green,
+                    leading: CircleAvatar(
+                      child: Icon(Icons.person),
+                      radius: 25,
+                    ),
+                    title: Text(
+                      "Karan Aujhla",
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                    subtitle: Row(
+                      children: [
+                        Text(
+                          "Artist",
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 159, 159, 159),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    hoverColor: Colors.green,
+                    leading: CircleAvatar(
+                      child: Icon(Icons.person_2),
+                      radius: 25,
+                    ),
+                    title: Text(
+                      "Paradox",
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                    subtitle: Row(
+                      children: [
+                        Text(
+                          "Artist",
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 159, 159, 159),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    hoverColor: Colors.green,
+                    leading: CircleAvatar(
+                      child: Icon(Icons.person_3),
+                      radius: 25,
+                    ),
+                    title: Text(
+                      "Shubh",
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                    subtitle: Row(
+                      children: [
+                        Text(
+                          "Artist",
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 159, 159, 159),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
