@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sf/providers/track_provider.dart';
+import 'package:sf/screens/add_to_playlist.dart';
 import 'package:sf/track_model.dart';
 
 class PlaylistHome extends StatefulWidget {
@@ -147,7 +148,7 @@ class _PlaylistHomeState extends State<PlaylistHome> {
                       ),
 
                       ///////////
-                      const SizedBox(height: 50),
+                      const SizedBox(height: 35),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -158,7 +159,14 @@ class _PlaylistHomeState extends State<PlaylistHome> {
                               style: TextButton.styleFrom(
                                 backgroundColor: Colors.white,
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AddToPlaylist(),
+                                  ),
+                                );
+                              },
                               child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -198,16 +206,18 @@ class _PlaylistHomeState extends State<PlaylistHome> {
 
                       const SizedBox(height: 20),
 
-                      tracker.recentSongs().isNotEmpty
+                      tracker.recentSongs().length > 4
                           ? Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                                vertical: 4,
+                              padding: const EdgeInsets.only(
+                                left: 16,
+                                right: 16,
+                                top: 4,
+                                bottom: 110,
                               ),
                               child: ListView.builder(
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
-                                itemCount: tracker.recentSongs().length,
+                                itemCount: 5,
                                 itemBuilder: (context, index) {
                                   final recentContent = tracker
                                       .recentSongs()[index];
