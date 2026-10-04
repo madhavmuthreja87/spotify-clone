@@ -6,7 +6,8 @@ import 'package:sf/providers/track_provider.dart';
 import 'package:sf/track_model.dart';
 
 class AddToPlaylist extends StatefulWidget {
-  const new({super.key});
+  final String pname;
+  const new({super.key, required this.pname});
 
   @override
   State<AddToPlaylist> createState() => _AddToPlaylistState();
@@ -15,7 +16,9 @@ class AddToPlaylist extends StatefulWidget {
 class _AddToPlaylistState extends State<AddToPlaylist> {
   @override
   Widget build(BuildContext context) {
-    final tracker = context.read<TrackProvider>();
+    final tracker = context.watch<TrackProvider>();
+    //  final inplayistsongs = context.read<TrackProvider>().songsOfPlaylist;
+
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
       appBar: AppBar(
@@ -42,18 +45,21 @@ class _AddToPlaylistState extends State<AddToPlaylist> {
                 itemCount: tracker.recentSongs().length,
                 itemBuilder: (context, index) {
                   final recentContent = tracker.recentSongs()[index];
-                  bool isLiked = tracker.likedSongs().any(
-                    (song) => song['id'] == recentContent['id'],
-                  );
+
+                  final bool isinplaylist = tracker
+                      .songsOfPlaylist(widget.pname)
+                      .any((song) => song['id'] == recentContent['id']);
+
                   TrackModel currentTrack = TrackModel(
                     id: recentContent['id'] ?? "",
                     title: recentContent['title'] ?? "",
                     artist: recentContent['artist'] ?? "",
                     duration: recentContent['duration'] ?? "",
-                    isStreamable: recentContent['isStreamable'] ?? "",
+                    isStreamable: recentContent['is_streamable'] ?? "",
                     artwork: recentContent['artwork'] ?? "",
                     streamUrl: recentContent['streamUrl'] ?? "",
                   );
+
                   return GestureDetector(
                     onTap: () {
                       context.read<TrackProvider>().setSongAndPlay(
@@ -100,18 +106,40 @@ class _AddToPlaylistState extends State<AddToPlaylist> {
                           const SizedBox(width: 8),
                           GestureDetector(
                             onTap: () async {
-                              log("Like the song pressed");
-
-                              if (!isLiked)
-                                await tracker.saveLikedSongs(currentTrack);
-                              else
-                                await tracker.removeLikedSong(currentTrack.id);
-
+                              if (!isinplaylist) {
+                                await tracker.addToPlaylist(
+                                  widget.pname,
+                                  currentTrack,
+                                );
+                                log("Add to   ${widget.pname}   playist");
+                              } else {
+                                await tracker.removeFromPlaylist(
+                                  widget.pname,
+                                  currentTrack.id,
+                                );
+                                log("Removed from   ${widget.pname}   playist");
+                              }
                               setState(() {});
 
-                              log(tracker.likedSongs().length.toString());
+                              log(
+                                tracker
+                                    .songsOfPlaylist(widget.pname)
+                                    .toList()
+                                    .length
+                                    .toString(),
+                              );
+                              // log("Like the song pressed");
+
+                              // if (!isLiked)
+                              //   await tracker.saveLikedSongs(currentTrack);
+                              // else
+                              //   await tracker.removeLikedSong(currentTrack.id);
+
+                              // setState(() {});
+
+                              // log(tracker.likedSongs().length.toString());
                             },
-                            child: !isLiked
+                            child: !isinplaylist
                                 ? Icon(
                                     Icons.add_circle_outline,
                                     color: const Color.fromARGB(

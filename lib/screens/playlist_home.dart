@@ -17,7 +17,8 @@ class PlaylistHome extends StatefulWidget {
 class _PlaylistHomeState extends State<PlaylistHome> {
   @override
   Widget build(BuildContext context) {
-    final tracker = context.read<TrackProvider>();
+    final tracker = context.watch<TrackProvider>();
+    final songofplaylist = tracker.songsOfPlaylist(widget.pname);
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -163,7 +164,8 @@ class _PlaylistHomeState extends State<PlaylistHome> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => AddToPlaylist(),
+                                    builder: (context) =>
+                                        AddToPlaylist(pname: widget.pname),
                                   ),
                                 );
                               },
@@ -191,6 +193,105 @@ class _PlaylistHomeState extends State<PlaylistHome> {
                       ),
 
                       const SizedBox(height: 24),
+
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 4,
+                        ),
+                        child: ListView.builder(
+                          itemCount: songofplaylist.length,
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            final songinplaylist = songofplaylist[index];
+
+                            final TrackModel currentTrack = TrackModel(
+                              id: songinplaylist['id'] ?? "",
+                              title: songinplaylist['title'] ?? "",
+                              artist: songinplaylist['artist'] ?? "",
+                              duration: songinplaylist['duration'] ?? "",
+                              isStreamable:
+                                  songinplaylist['is_streamable'] ?? "",
+                              artwork: songinplaylist['artwork'] ?? "",
+                              streamUrl: songinplaylist['streamUrl'] ?? "",
+                            );
+
+                            return GestureDetector(
+                              onTap: () {
+                                tracker.setSongAndPlay(currentTrack);
+                              },
+                              child: ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                dense: true,
+
+                                leading: ClipRRect(
+                                  borderRadius: BorderRadius.circular(7),
+                                  child: Image.network(
+                                    songinplaylist['artwork'],
+                                    fit: BoxFit.cover,
+                                    height: 47,
+                                    width: 47,
+                                  ),
+                                ),
+
+                                title: Text(
+                                  songinplaylist['title'],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+
+                                subtitle: Text(
+                                  songinplaylist['artist'],
+                                  style: const TextStyle(color: Colors.grey),
+                                ),
+
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const SizedBox(width: 8),
+
+                                    GestureDetector(
+                                      onTap: () async {
+                                        log("Like the song pressed");
+
+                                        // if (!isLiked) {
+                                        //   await tracker.saveLikedSongs(
+                                        //     currentTrack,
+                                        //   );
+                                        // } else {
+                                        //   await tracker.removeLikedSong(
+                                        //     currentTrack.id,
+                                        //   );
+                                        // }
+
+                                        setState(() {});
+
+                                        log(
+                                          tracker
+                                              .likedSongs()
+                                              .length
+                                              .toString(),
+                                        );
+                                      },
+                                      child: const Icon(
+                                        Icons.check_circle,
+                                        color: Color.fromARGB(255, 92, 214, 96),
+                                        size: 20,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
 
                       const Padding(
                         padding: EdgeInsets.only(left: 8.0),

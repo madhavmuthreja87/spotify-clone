@@ -136,10 +136,9 @@ class TrackProvider extends ChangeNotifier {
   }
 
   Future<void> addToPlaylist(String pname, TrackModel tm) async {
-    final existingPlaylist = playlistBox.get(
-      pname,
-      defaultValue: <TrackModel>[],
-    );
+    final playlist = playlistBox.get(pname, defaultValue: <Map>[]);
+
+    final existingPlaylist = List<Map>.from(playlist);
 
     existingPlaylist.add({
       'id': tm.id,
@@ -152,6 +151,22 @@ class TrackProvider extends ChangeNotifier {
     });
 
     await playlistBox.put(pname, existingPlaylist);
+
+    notifyListeners();
+  }
+
+  Future<void> removeFromPlaylist(String pname, String songID) async {
+    final existingPlaylist = playlistBox.get(
+      pname,
+      defaultValue: <TrackModel>[],
+    );
+
+    if (existingPlaylist == null) return;
+
+    existingPlaylist.removeWhere((song) => song['id'] == songID);
+
+    await playlistBox.put(pname, existingPlaylist);
+
     notifyListeners();
   }
 
@@ -161,8 +176,8 @@ class TrackProvider extends ChangeNotifier {
     return playlist;
   }
 
-  List<TrackModel> songsOfPlaylist(String pname) {
-    return playlistBox.get(pname, defaultValue: <TrackModel>[]);
+  List<Map> songsOfPlaylist(String pname) {
+    return List<Map>.from(playlistBox.get(pname, defaultValue: <Map>[]));
   }
 
   @override
