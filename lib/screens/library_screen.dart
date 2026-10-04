@@ -6,6 +6,7 @@ import 'package:sf/audis_api.dart';
 import 'package:sf/providers/track_provider.dart';
 import 'package:sf/screens/create_playlist.dart';
 import 'package:sf/screens/liked_songs.dart';
+import 'package:sf/screens/playlist_home.dart';
 
 class LibraryScreen extends StatefulWidget {
   const new({super.key});
@@ -17,7 +18,7 @@ class LibraryScreen extends StatefulWidget {
 class _LibraryScreenState extends State<LibraryScreen> {
   @override
   Widget build(BuildContext context) {
-    final tracker = context.read<TrackProvider>();
+    final tracker = context.watch<TrackProvider>();
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
       body: Container(
@@ -255,35 +256,54 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     itemBuilder: (context, index) {
                       final playlistname = tracker.allplaylistsName()[index];
 
-                      return ListTile(
-                        contentPadding: EdgeInsets.zero,
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PlaylistHome(pname: playlistname),
+                            ),
+                          );
+                        },
+                        child: ListTile(
+                          contentPadding: EdgeInsets.zero,
 
-                        leading: Container(
-                          height: 62,
-                          width: 62,
+                          leading: Container(
+                            height: 62,
+                            width: 62,
 
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Center(
-                            child: Icon(Icons.headphones, color: Colors.white),
-                          ),
-                        ),
-                        title: Text(
-                          playlistname,
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                        subtitle: Row(
-                          children: [
-                            Text(
-                              " Playlist • Username",
-                              style: TextStyle(
-                                color: const Color.fromARGB(255, 159, 159, 159),
-                                fontSize: 13,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.headphones,
+                                color: Colors.white,
                               ),
                             ),
-                          ],
+                          ),
+                          title: Text(
+                            playlistname,
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          ),
+                          subtitle: Row(
+                            children: [
+                              Text(
+                                " Playlist • Username",
+                                style: TextStyle(
+                                  color: const Color.fromARGB(
+                                    255,
+                                    159,
+                                    159,
+                                    159,
+                                  ),
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },

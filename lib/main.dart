@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: PlaylistHome(pname: "dsf"));
+    return MaterialApp(home: NavigationBar());
   }
 }
 
@@ -51,7 +51,7 @@ class _MyAppState extends State<NavigationBar> {
     SettingsScreen(),
   ];
 
-  int currentIndex = 0;
+  int currentIndex = 2;
 
   @override
   Widget build(BuildContext context) {
