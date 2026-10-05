@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sf/providers/track_provider.dart';
-import 'package:sf/track_model.dart';
+import 'package:sf/models/track_model.dart';
 
 class AddToPlaylist extends StatefulWidget {
   final String pname;

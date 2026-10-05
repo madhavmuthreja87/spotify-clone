@@ -19,6 +19,7 @@ void main() async {
   await Hive.openBox("recentSongs");
   await Hive.openBox('likedSongs');
   await Hive.openBox("playlistBox");
+  await Hive.openBox("mostPlayedBox");
 
   runApp(
     ChangeNotifierProvider(create: (_) => TrackProvider(), child: MyApp()),
@@ -51,7 +52,7 @@ class _MyAppState extends State<NavigationBar> {
     SettingsScreen(),
   ];
 
-  int currentIndex = 2;
+  int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {

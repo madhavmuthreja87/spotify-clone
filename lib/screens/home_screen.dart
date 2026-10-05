@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sf/audis_api.dart';
 import 'package:sf/providers/track_provider.dart';
-import 'package:sf/track_model.dart';
+import 'package:sf/models/track_model.dart';
+import 'package:sf/screens/liked_songs.dart';
 
 class HomeScreen extends StatefulWidget {
   const new({super.key});
@@ -28,8 +29,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<TrackProvider>().addTemporaryMostPlayedData();
+    });
+
     display();
   }
 
@@ -41,12 +46,31 @@ class _HomeScreenState extends State<HomeScreen> {
     final fourthElement = tracker.recentSongs()[3];
     final fifthElement = tracker.recentSongs()[4];
     final sixthElement = tracker.recentSongs()[5];
+
+    final mostPlayed0 = tracker.mostPlayedSong()[0];
+    final mostPlayed1 = tracker.mostPlayedSong()[1];
+    final mostPlayed2 = tracker.mostPlayedSong()[2];
+    final mostPlayed3 = tracker.mostPlayedSong()[3];
+    final mostPlayed4 = tracker.mostPlayedSong()[4];
+    final mostPlayed5 = tracker.mostPlayedSong()[5];
+    final mostPlayed6 = tracker.mostPlayedSong()[6];
+
     List<Map> justBackIn = [
       secondElement,
       thirdElement,
       fourthElement,
       fifthElement,
       sixthElement,
+    ];
+
+    List<Map> mostPlayed = [
+      mostPlayed0,
+      mostPlayed1,
+      mostPlayed2,
+      mostPlayed3,
+      mostPlayed4,
+      mostPlayed5,
+      mostPlayed6,
     ];
 
     return Scaffold(
@@ -123,138 +147,145 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
-                    child: GridView.count(
+                    child: GridView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 8,
-                      crossAxisSpacing: 8,
-                      childAspectRatio: 3.45,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(81, 157, 155, 155),
-                            borderRadius: BorderRadius.circular(5),
+                      physics: const NeverScrollableScrollPhysics(),
+
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 8,
+                            crossAxisSpacing: 8,
+                            childAspectRatio: 3.37,
                           ),
-                          // child: Row(
-                          //   children: [
-                          //     Container(child: Text("Image")),
-                          //     Text(
-                          //       "Hello",
-                          //       style: TextStyle(color: Colors.white),
-                          //     ),
-                          //   ],
-                          // ),
-                          // child: ListTile(title: Container(child: Text("Image"),sub)),
-                        ),
-                        Container(
+
+                      itemCount: tracker.mostPlayedSong().length + 1,
+
+                      itemBuilder: (context, index) {
+                        if (index == tracker.mostPlayedSong().length) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder: (
+                                    context,
+                                    animation,
+                                    secondaryAnimation,
+                                  ) => const LikedSongs(),
+                                  transitionsBuilder:
+                                      (
+                                        context,
+                                        animation,
+                                        secondaryAnimation,
+                                        child,
+                                      ) {
+                                        final curvedAnimation = CurvedAnimation(
+                                          parent: animation,
+                                          curve: Curves.easeInQuad,
+                                        );
+
+                                        return FadeTransition(
+                                          opacity: curvedAnimation,
+                                          child: ScaleTransition(
+                                            scale: Tween<double>(
+                                              begin: 0.95,
+                                              end: 1.0,
+                                            ).animate(curvedAnimation),
+                                            child: child,
+                                          ),
+                                        );
+                                      },
+                                ),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(81, 116, 114, 114),
+                                borderRadius: BorderRadius.circular(7),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    height: 55,
+                                    width: 55,
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [
+                                          Colors.deepPurple,
+                                          Colors.white,
+                                        ],
+                                      ),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: const Center(
+                                      child: Icon(
+                                        Icons.favorite,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+
+                                  const SizedBox(width: 8),
+
+                                  const Padding(
+                                    padding: EdgeInsets.only(right: 12),
+                                    child: Text(
+                                      "Liked Songs",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                        final song = mostPlayed[index];
+
+                        return Container(
                           decoration: BoxDecoration(
-                            color: Colors.grey,
+                            color: const Color.fromARGB(81, 116, 114, 114),
                             borderRadius: BorderRadius.circular(7),
                           ),
                           child: Row(
                             children: [
-                              Container(child: Text("Image")),
-                              Text(
-                                "Hello",
-                                style: TextStyle(color: Colors.white),
+                              // Image
+                              ClipRRect(
+                                borderRadius: BorderRadiusGeometry.circular(5),
+                                child: Image.network(
+                                  song['artwork'],
+                                  width: 55,
+                                  height: double.infinity,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+
+                              const SizedBox(width: 8),
+
+                              // Song title
+                              Expanded(
+                                child: Text(
+                                  song['title'],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(7),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(child: Text("Image")),
-                              Text(
-                                "Hello",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(7),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(child: Text("Image")),
-                              Text(
-                                "Hello",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(7),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(child: Text("Image")),
-                              Text(
-                                "Hello",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(7),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(child: Text("Image")),
-                              Text(
-                                "Hello",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(7),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(child: Text("Image")),
-                              Text(
-                                "Hello",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(7),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(child: Text("Image")),
-                              Text(
-                                "Hello",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                        );
+                      },
                     ),
                   ),
+
                   const SizedBox(height: 30),
                   Text(
                     "Just back in",

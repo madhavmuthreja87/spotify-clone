@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:http/http.dart' as http;
-import 'package:sf/track_model.dart';
+import 'package:sf/models/track_model.dart';
 
 class AudisApi {
   static const String baseUrl = "https://api.audius.co/v1";
@@ -39,5 +39,20 @@ class AudisApi {
     final List data = json['data'] ?? [];
 
     return data.map((track) => TrackModel.fromjson(track)).toList();
+  }
+
+  Future<String> getFreshStreamUrl(String trackId) async {
+    final url = Uri.parse('$baseUrl/tracks/$trackId/stream')
+        .replace(queryParameters: {'no_redirect': 'true'});
+
+    final response = await http.get(url);
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to get fresh stream URL: ${response.statusCode}');
+    }
+
+    final Map<String, dynamic> json = jsonDecode(response.body);
+
+    return json['data'];
   }
 }

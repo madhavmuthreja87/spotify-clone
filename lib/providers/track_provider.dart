@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:sf/track_model.dart';
+import 'package:sf/audis_api.dart';
+import 'package:sf/models/track_model.dart';
 
 class TrackProvider extends ChangeNotifier {
   final AudioPlayer player = AudioPlayer();
@@ -12,6 +15,7 @@ class TrackProvider extends ChangeNotifier {
   final Box recentBox = Hive.box("recentSongs");
   final Box likedBox = Hive.box("likedSongs");
   final Box playlistBox = Hive.box("playlistBox");
+  final Box mostPlayedBox = Hive.box("mostPlayedBox");
 
   TrackProvider() {
     player.playingStream.listen((playing) {
@@ -19,27 +23,132 @@ class TrackProvider extends ChangeNotifier {
       notifyListeners();
     });
   }
+  Future<void> addTemporaryMostPlayedData() async {
+    await mostPlayedBox.clear();
 
-  Future<void> setSongAndPlay(TrackModel song) async {
-    currentSong = song;
-    notifyListeners();
-    // await player.setUrl(song.streamUrl.toString());
-    // await player.stop();
-    // await player.play();
-    await saveRecentSongs(song);
-    notifyListeners();
+    await mostPlayedBox.put('song1', {
+      'id': 'song1',
+      'title': 'Blinding Lights',
+      'artist': 'The Weeknd',
+      'duration': 200,
+      'is_streamable': 'true',
+      'artwork': 'https://picsum.photos/300?1',
+      'streamUrl': 'https://example.com/song1.mp3',
+      'playCount': 1,
+    });
 
-    await player.setUrl(song.streamUrl.toString());
-    // await player.stop();
-    await player.play();
-    isPlaying = true;
+    await mostPlayedBox.put('song2', {
+      'id': 'song2',
+      'title': 'Starboy',
+      'artist': 'The Weeknd',
+      'duration': 230,
+      'is_streamable': 'true',
+      'artwork': 'https://picsum.photos/300?2',
+      'streamUrl': 'https://example.com/song2.mp3',
+      'playCount': 1,
+    });
+
+    await mostPlayedBox.put('song3', {
+      'id': 'song3',
+      'title': 'Shape of You',
+      'artist': 'Ed Sheeran',
+      'duration': 234,
+      'is_streamable': 'true',
+      'artwork': 'https://picsum.photos/300?3',
+      'streamUrl': 'https://example.com/song3.mp3',
+      'playCount': 1,
+    });
+
+    await mostPlayedBox.put('song4', {
+      'id': 'song4',
+      'title': 'Perfect',
+      'artist': 'Ed Sheeran',
+      'duration': 263,
+      'is_streamable': 'true',
+      'artwork': 'https://picsum.photos/300?4',
+      'streamUrl': 'https://example.com/song4.mp3',
+      'playCount': 1,
+    });
+
+    await mostPlayedBox.put('song5', {
+      'id': 'song5',
+      'title': 'Believer',
+      'artist': 'Imagine Dragons',
+      'duration': 204,
+      'is_streamable': 'true',
+      'artwork': 'https://picsum.photos/300?5',
+      'streamUrl': 'https://example.com/song5.mp3',
+      'playCount': 1,
+    });
+
+    await mostPlayedBox.put('song6', {
+      'id': 'song6',
+      'title': 'Thunder',
+      'artist': 'Imagine Dragons',
+      'duration': 187,
+      'is_streamable': 'true',
+      'artwork': 'https://picsum.photos/300?6',
+      'streamUrl': 'https://example.com/song6.mp3',
+      'playCount': 1,
+    });
+    await mostPlayedBox.put('song7', {
+      'id': 'song1',
+      'title': 'OK',
+      'artist': 'The Weeknd',
+      'duration': 200,
+      'is_streamable': 'true',
+      'artwork': 'https://picsum.photos/300?1',
+      'streamUrl': 'https://example.com/song1.mp3',
+      'playCount': 2,
+    });
 
     notifyListeners();
   }
 
+  Future<void> setSongAndPlay(TrackModel song) async {
+    try {
+      currentSong = song;
+      notifyListeners();
+
+      await saveRecentSongs(song);
+
+      // First try the URL we already have.
+      String? url = song.streamUrl;
+
+      if (url == null || url.isEmpty) {
+        throw Exception("Stream URL is empty");
+      }
+
+      try {
+        // Fast path
+        await player.setUrl(url);
+        await player.play();
+      } catch (e) {
+        log("Old stream URL failed. Getting fresh URL...");
+
+        // URL may have expired → get a new signed URL
+        final freshUrl = await AudisApi().getFreshStreamUrl(song.id);
+        // currentSong?.streamUrl = freshUrl;
+        await player.setUrl(freshUrl);
+        await player.play();
+      }
+
+      // Only count after successful playback
+      await recordSongPlayedCount(song);
+    } catch (e, st) {
+      log("PLAY ERROR: $e");
+      log("$st");
+
+      isPlaying = false;
+      notifyListeners();
+    }
+  }
+
   Future<void> pause() async {
-    await player.pause();
     isPlaying = false;
+    notifyListeners();
+    await player.pause();
+
     notifyListeners();
   }
 
@@ -71,6 +180,35 @@ class TrackProvider extends ChangeNotifier {
       'streamUrl': song.streamUrl,
       'playedAt': DateTime.now().millisecondsSinceEpoch,
     });
+  }
+
+  Future<void> recordSongPlayedCount(TrackModel song) async {
+    final currentCount = mostPlayedBox.get(song.id, defaultValue: 0);
+
+    await mostPlayedBox.put(song.id, {
+      'id': song.id,
+      'title': song.title,
+      'artist': song.artist,
+      'duration': song.duration,
+      'is_streamable': song.isStreamable,
+      'artwork': song.artwork,
+      'streamUrl': song.streamUrl,
+      'playCount': currentCount + 1,
+    });
+
+    notifyListeners();
+  }
+
+  List<Map> mostPlayedSong() {
+    final songs = mostPlayedBox.values
+        .map((song) => Map<String, dynamic>.from(song))
+        .toList();
+
+    songs.sort(
+      (a, b) => (b['playCount'] as int).compareTo(a['playCount'] as int),
+    );
+
+    return songs.take(7).toList();
   }
 
   List<Map> recentSongs() {
