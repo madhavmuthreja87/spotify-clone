@@ -26,7 +26,7 @@ class AudisApi {
     log("Searching songs called");
 
     final url = Uri.parse('$baseUrl/tracks/search')
-        .replace(queryParameters: {'query': query, 'limit': '60'});
+        .replace(queryParameters: {'query': query, 'limit': '80'});
 
     final response = await http.get(url);
 

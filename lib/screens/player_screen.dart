@@ -80,7 +80,11 @@ class _PlayerScreenState extends State<PlayerScreen>
         centerTitle: true,
         title: Text(
           "Recommended for you",
-          style: TextStyle(color: Colors.white, fontSize: 14),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         actions: [
           Padding(

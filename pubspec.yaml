@@ -42,6 +42,11 @@ dependencies:
   palette_generator_plus: 
   lottie: 
 
+
+  live_activity_kit: ^1.1.1
+  notch:
+  overlay_pop_up: ^1.0.6+6
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

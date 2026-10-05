@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
 import 'package:just_audio/just_audio.dart';
+
 import 'package:sf/audis_api.dart';
 import 'package:sf/models/track_model.dart';
+import 'package:sf/playback_activity_service.dart';
 
 class TrackProvider extends ChangeNotifier {
   final AudioPlayer player = AudioPlayer();
@@ -123,6 +125,9 @@ class TrackProvider extends ChangeNotifier {
         // Fast path
         await player.setUrl(url);
         await player.play();
+        await PlaybackActivityService.start(song, true);
+        isPlaying = true;
+        notifyListeners();
       } catch (e) {
         log("Old stream URL failed. Getting fresh URL...");
 
@@ -131,6 +136,9 @@ class TrackProvider extends ChangeNotifier {
         // currentSong?.streamUrl = freshUrl;
         await player.setUrl(freshUrl);
         await player.play();
+        await PlaybackActivityService.start(song, true);
+        isPlaying = true;
+        notifyListeners();
       }
 
       // Only count after successful playback
@@ -148,7 +156,8 @@ class TrackProvider extends ChangeNotifier {
     isPlaying = false;
     notifyListeners();
     await player.pause();
-
+    if (currentSong != null)
+      await PlaybackActivityService.update(currentSong!, false);
     notifyListeners();
   }
 
@@ -157,6 +166,10 @@ class TrackProvider extends ChangeNotifier {
     notifyListeners();
     await player.play();
 
+    if (currentSong != null) {
+      await PlaybackActivityService.update(currentSong!, true);
+    }
+
     notifyListeners();
   }
 
@@ -164,6 +177,7 @@ class TrackProvider extends ChangeNotifier {
     isPlaying = false;
     notifyListeners();
     await player.stop();
+    await PlaybackActivityService.end();
 
     notifyListeners();
   }

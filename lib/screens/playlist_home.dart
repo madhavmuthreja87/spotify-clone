@@ -18,8 +18,8 @@ class PlaylistHome extends StatefulWidget {
 class _PlaylistHomeState extends State<PlaylistHome> {
   @override
   Widget build(BuildContext context) {
-    final tracker = context.watch<TrackProvider>();
-    final songofplaylist = tracker.songsOfPlaylist(widget.pname);
+    //final tracker = context.watch<TrackProvider>();
+    //final songofplaylist = tracker.songsOfPlaylist(widget.pname);
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -200,74 +200,85 @@ class _PlaylistHomeState extends State<PlaylistHome> {
                           horizontal: 16.0,
                           vertical: 4,
                         ),
-                        child: ListView.builder(
-                          itemCount: songofplaylist.length,
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (context, index) {
-                            final songinplaylist = songofplaylist[index];
+                        child: Consumer<TrackProvider>(
+                          builder: (context, tracker, child) {
+                            return ListView.builder(
+                              itemCount: tracker
+                                  .songsOfPlaylist(widget.pname)
+                                  .length,
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                final songinplaylist = tracker.songsOfPlaylist(
+                                  widget.pname,
+                                )[index];
 
-                            final bool isinplaylist = tracker
-                                .songsOfPlaylist(widget.pname)
-                                .any(
-                                  (song) => song['id'] == songinplaylist['id'],
+                                final bool isinplaylist = tracker
+                                    .songsOfPlaylist(widget.pname)
+                                    .any(
+                                      (song) =>
+                                          song['id'] == songinplaylist['id'],
+                                    );
+                                final TrackModel currentTrack = TrackModel(
+                                  id: songinplaylist['id'] ?? "",
+                                  title: songinplaylist['title'] ?? "",
+                                  artist: songinplaylist['artist'] ?? "",
+                                  duration: songinplaylist['duration'] ?? "",
+                                  isStreamable:
+                                      songinplaylist['is_streamable'] ?? "",
+                                  artwork: songinplaylist['artwork'] ?? "",
+                                  streamUrl: songinplaylist['streamUrl'] ?? "",
                                 );
-                            final TrackModel currentTrack = TrackModel(
-                              id: songinplaylist['id'] ?? "",
-                              title: songinplaylist['title'] ?? "",
-                              artist: songinplaylist['artist'] ?? "",
-                              duration: songinplaylist['duration'] ?? "",
-                              isStreamable:
-                                  songinplaylist['is_streamable'] ?? "",
-                              artwork: songinplaylist['artwork'] ?? "",
-                              streamUrl: songinplaylist['streamUrl'] ?? "",
-                            );
 
-                            return GestureDetector(
-                              onTap: () {
-                                tracker.setSongAndPlay(currentTrack);
+                                return GestureDetector(
+                                  onTap: () {
+                                    tracker.setSongAndPlay(currentTrack);
+                                  },
+                                  child: ListTile(
+                                    contentPadding: EdgeInsets.zero,
+                                    dense: true,
+
+                                    leading: ClipRRect(
+                                      borderRadius: BorderRadius.circular(7),
+                                      child: Image.network(
+                                        songinplaylist['artwork'],
+                                        fit: BoxFit.cover,
+                                        height: 47,
+                                        width: 47,
+                                      ),
+                                    ),
+
+                                    title: Text(
+                                      songinplaylist['title'],
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+
+                                    subtitle: Text(
+                                      songinplaylist['artist'],
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+
+                                    trailing: Icon(
+                                      Icons.more_vert,
+                                      color: const Color.fromARGB(
+                                        255,
+                                        118,
+                                        117,
+                                        117,
+                                      ),
+                                      size: 25,
+                                    ),
+                                  ),
+                                );
                               },
-                              child: ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                dense: true,
-
-                                leading: ClipRRect(
-                                  borderRadius: BorderRadius.circular(7),
-                                  child: Image.network(
-                                    songinplaylist['artwork'],
-                                    fit: BoxFit.cover,
-                                    height: 47,
-                                    width: 47,
-                                  ),
-                                ),
-
-                                title: Text(
-                                  songinplaylist['title'],
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-
-                                subtitle: Text(
-                                  songinplaylist['artist'],
-                                  style: const TextStyle(color: Colors.grey),
-                                ),
-
-                                trailing: Icon(
-                                  Icons.more_vert,
-                                  color: const Color.fromARGB(
-                                    255,
-                                    118,
-                                    117,
-                                    117,
-                                  ),
-                                  size: 25,
-                                ),
-                              ),
                             );
                           },
                         ),
@@ -285,45 +296,50 @@ class _PlaylistHomeState extends State<PlaylistHome> {
                         ),
                       ),
                       ///////////////////////////////////////////////////////////////////////////////////////////////////
-                      tracker.recentSongs().length > 4
-                          ? Padding(
-                              padding: const EdgeInsets.only(
-                                left: 16,
-                                right: 16,
-                                top: 0,
-                                bottom: 110,
-                              ),
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: tracker.recentSongs().length,
-                                itemBuilder: (context, index) {
-                                  final recentContent = tracker
-                                      .recentSongs()[index];
+                      Consumer<TrackProvider>(
+                        builder: (context, tracker, child) {
+                          return tracker.recentSongs().length > 4
+                              ? Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 16,
+                                    right: 16,
+                                    top: 0,
+                                    bottom: 110,
+                                  ),
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: tracker.recentSongs().length,
+                                    itemBuilder: (context, index) {
+                                      final recentContent = tracker
+                                          .recentSongs()[index];
 
-                                  final bool isinplaylist = tracker
-                                      .songsOfPlaylist(widget.pname)
-                                      .any(
-                                        (song) =>
-                                            song['id'] == recentContent['id'],
+                                      final bool isinplaylist = tracker
+                                          .songsOfPlaylist(widget.pname)
+                                          .any(
+                                            (song) =>
+                                                song['id'] ==
+                                                recentContent['id'],
+                                          );
+
+                                      TrackModel currentTrack = TrackModel(
+                                        id: recentContent['id'] ?? "",
+                                        title: recentContent['title'] ?? "",
+                                        artist: recentContent['artist'] ?? "",
+                                        duration:
+                                            recentContent['duration'] ?? "",
+                                        isStreamable:
+                                            recentContent['is_streamable'] ??
+                                            "",
+                                        artwork: recentContent['artwork'] ?? "",
+                                        streamUrl:
+                                            recentContent['streamUrl'] ?? "",
                                       );
 
-                                  TrackModel currentTrack = TrackModel(
-                                    id: recentContent['id'] ?? "",
-                                    title: recentContent['title'] ?? "",
-                                    artist: recentContent['artist'] ?? "",
-                                    duration: recentContent['duration'] ?? "",
-                                    isStreamable:
-                                        recentContent['is_streamable'] ?? "",
-                                    artwork: recentContent['artwork'] ?? "",
-                                    streamUrl: recentContent['streamUrl'] ?? "",
-                                  );
-
-                                  return GestureDetector(
-                                    onTap: () {
-                                      context
-                                          .read<TrackProvider>()
-                                          .setSongAndPlay(
+                                      return GestureDetector(
+                                        onTap: () {
+                                          context.read<TrackProvider>().setSongAndPlay(
                                             TrackModel(
                                               id: recentContent['id'] ?? "",
                                               title:
@@ -344,128 +360,132 @@ class _PlaylistHomeState extends State<PlaylistHome> {
                                                   "",
                                             ),
                                           );
-                                    },
-                                    child: !isinplaylist
-                                        ? ListTile(
-                                            contentPadding: EdgeInsets.zero,
-                                            dense: true,
-                                            leading: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(7),
-                                              child: Image.network(
-                                                recentContent['artwork'],
-                                                fit: BoxFit.cover,
-                                                height: 47,
-                                                width: 47,
-                                              ),
-                                            ),
-                                            title: Text(
-                                              recentContent['title'],
-                                              maxLines: 1,
-
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                            subtitle: Text(
-                                              recentContent['artist'],
-                                              style: TextStyle(
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                            trailing: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                const SizedBox(width: 8),
-                                                GestureDetector(
-                                                  onTap: () async {
-                                                    if (!isinplaylist) {
-                                                      await tracker
-                                                          .addToPlaylist(
-                                                            widget.pname,
-                                                            currentTrack,
-                                                          );
-                                                      log(
-                                                        "Add to   ${widget.pname}   playist",
-                                                      );
-                                                    } else {
-                                                      await tracker
-                                                          .removeFromPlaylist(
-                                                            widget.pname,
-                                                            currentTrack.id,
-                                                          );
-                                                      log(
-                                                        "Removed from   ${widget.pname}   playist",
-                                                      );
-                                                    }
-                                                    setState(() {});
-
-                                                    log(
-                                                      tracker
-                                                          .songsOfPlaylist(
-                                                            widget.pname,
-                                                          )
-                                                          .toList()
-                                                          .length
-                                                          .toString(),
-                                                    );
-                                                    // log("Like the song pressed");
-
-                                                    // if (!isLiked)
-                                                    //   await tracker.saveLikedSongs(currentTrack);
-                                                    // else
-                                                    //   await tracker.removeLikedSong(currentTrack.id);
-
-                                                    // setState(() {});
-
-                                                    // log(tracker.likedSongs().length.toString());
-                                                  },
-                                                  child: !isinplaylist
-                                                      ? Icon(
-                                                          Icons
-                                                              .add_circle_outline,
-                                                          color:
-                                                              const Color.fromARGB(
-                                                                255,
-                                                                118,
-                                                                118,
-                                                                118,
-                                                              ),
-                                                          size: 22,
-                                                        )
-                                                      : Icon(
-                                                          Icons.check_circle,
-                                                          color:
-                                                              const Color.fromARGB(
-                                                                255,
-                                                                92,
-                                                                214,
-                                                                96,
-                                                              ),
-                                                          size: 22,
-                                                        ),
+                                        },
+                                        child: !isinplaylist
+                                            ? ListTile(
+                                                contentPadding: EdgeInsets.zero,
+                                                dense: true,
+                                                leading: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(7),
+                                                  child: Image.network(
+                                                    recentContent['artwork'],
+                                                    fit: BoxFit.cover,
+                                                    height: 47,
+                                                    width: 47,
+                                                  ),
                                                 ),
-                                              ],
-                                            ),
-                                          )
-                                        : const SizedBox(),
-                                  );
-                                },
-                              ),
-                            )
-                          : const Expanded(
-                              child: Center(
-                                child: Text(
-                                  "No recent songs",
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 16,
+                                                title: Text(
+                                                  recentContent['title'],
+                                                  maxLines: 1,
+
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                subtitle: Text(
+                                                  recentContent['artist'],
+                                                  style: TextStyle(
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                                trailing: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    const SizedBox(width: 8),
+                                                    GestureDetector(
+                                                      onTap: () async {
+                                                        if (!isinplaylist) {
+                                                          await tracker
+                                                              .addToPlaylist(
+                                                                widget.pname,
+                                                                currentTrack,
+                                                              );
+                                                          log(
+                                                            "Add to   ${widget.pname}   playist",
+                                                          );
+                                                        } else {
+                                                          await tracker
+                                                              .removeFromPlaylist(
+                                                                widget.pname,
+                                                                currentTrack.id,
+                                                              );
+                                                          log(
+                                                            "Removed from   ${widget.pname}   playist",
+                                                          );
+                                                        }
+                                                        setState(() {});
+
+                                                        log(
+                                                          tracker
+                                                              .songsOfPlaylist(
+                                                                widget.pname,
+                                                              )
+                                                              .toList()
+                                                              .length
+                                                              .toString(),
+                                                        );
+                                                        // log("Like the song pressed");
+
+                                                        // if (!isLiked)
+                                                        //   await tracker.saveLikedSongs(currentTrack);
+                                                        // else
+                                                        //   await tracker.removeLikedSong(currentTrack.id);
+
+                                                        // setState(() {});
+
+                                                        // log(tracker.likedSongs().length.toString());
+                                                      },
+                                                      child: !isinplaylist
+                                                          ? Icon(
+                                                              Icons
+                                                                  .add_circle_outline,
+                                                              color:
+                                                                  const Color.fromARGB(
+                                                                    255,
+                                                                    118,
+                                                                    118,
+                                                                    118,
+                                                                  ),
+                                                              size: 22,
+                                                            )
+                                                          : Icon(
+                                                              Icons
+                                                                  .check_circle,
+                                                              color:
+                                                                  const Color.fromARGB(
+                                                                    255,
+                                                                    92,
+                                                                    214,
+                                                                    96,
+                                                                  ),
+                                                              size: 22,
+                                                            ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            : const SizedBox(),
+                                      );
+                                    },
                                   ),
-                                ),
-                              ),
-                            ),
+                                )
+                              : const Expanded(
+                                  child: Center(
+                                    child: Text(
+                                      "No recent songs",
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                        },
+                      ),
                     ],
                   ),
                 ),

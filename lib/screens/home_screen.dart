@@ -202,18 +202,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Container(
                               decoration: BoxDecoration(
                                 color: const Color.fromARGB(81, 116, 114, 114),
-                                borderRadius: BorderRadius.circular(7),
+                                borderRadius: BorderRadius.circular(5),
                               ),
                               child: Row(
                                 children: [
                                   Container(
                                     height: 55,
-                                    width: 55,
+                                    width: 50,
                                     decoration: BoxDecoration(
                                       gradient: const LinearGradient(
                                         begin: Alignment.topLeft,
                                         end: Alignment.bottomRight,
                                         colors: [
+                                          // Color(0xFF6A45EA),
+                                          // Color(0xFF9AA7E3),
                                           Colors.deepPurple,
                                           Colors.white,
                                         ],
@@ -250,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         return Container(
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(81, 116, 114, 114),
-                            borderRadius: BorderRadius.circular(7),
+                            borderRadius: BorderRadius.circular(4),
                           ),
                           child: Row(
                             children: [
@@ -259,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 borderRadius: BorderRadiusGeometry.circular(5),
                                 child: Image.network(
                                   song['artwork'],
-                                  width: 55,
+                                  width: 51,
                                   height: double.infinity,
                                   fit: BoxFit.cover,
                                 ),

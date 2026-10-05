@@ -15,7 +15,7 @@ class LikedSongs extends StatefulWidget {
 class _LikedSongsState extends State<LikedSongs> {
   @override
   Widget build(BuildContext context) {
-    final tracker = context.read<TrackProvider>();
+    //  final tracker = context.read<TrackProvider>();
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -121,11 +121,13 @@ class _LikedSongsState extends State<LikedSongs> {
                         ),
                       ),
                       const SizedBox(height: 21),
-                      Text(
-                        "${tracker.likedBox.length} songs",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w500,
+                      Consumer<TrackProvider>(
+                        builder: (context, tracker, child) => Text(
+                          "${tracker.likedBox.length} songs",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 5),
@@ -216,75 +218,79 @@ class _LikedSongsState extends State<LikedSongs> {
                 ],
               ),
               const SizedBox(height: 20),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: tracker.likedSongs().length,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  final likedSong = tracker.likedSongs()[index];
-                  return GestureDetector(
-                    onTap: () {
-                      log("liked list tapped");
-                      context.read<TrackProvider>().setSongAndPlay(
-                        TrackModel(
-                          id: likedSong['id'] ?? "",
-                          title: likedSong['title'] ?? "",
-                          artist: likedSong['artist'] ?? "",
-                          duration: likedSong['duration'] ?? "",
-                          isStreamable: likedSong['isStreamable'] ?? "",
-                          artwork: likedSong['artwork'] ?? "",
-                          streamUrl: likedSong['streamUrl'] ?? "",
+              Consumer<TrackProvider>(
+                builder: (context, tracker, child) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: tracker.likedSongs().length,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final likedSong = tracker.likedSongs()[index];
+                      return GestureDetector(
+                        onTap: () {
+                          log("liked list tapped");
+                          context.read<TrackProvider>().setSongAndPlay(
+                            TrackModel(
+                              id: likedSong['id'] ?? "",
+                              title: likedSong['title'] ?? "",
+                              artist: likedSong['artist'] ?? "",
+                              duration: likedSong['duration'] ?? "",
+                              isStreamable: likedSong['isStreamable'] ?? "",
+                              artwork: likedSong['artwork'] ?? "",
+                              streamUrl: likedSong['streamUrl'] ?? "",
+                            ),
+                          );
+                        },
+                        child: GestureDetector(
+                          onTap: () {
+                            context.read<TrackProvider>().setSongAndPlay(
+                              TrackModel(
+                                id: likedSong['id'] ?? "",
+                                title: likedSong['title'] ?? "",
+                                artist: likedSong['artist'] ?? "",
+                                duration: likedSong['duration'] ?? "",
+                                isStreamable: likedSong['isStreamable'] ?? "",
+                                artwork: likedSong['artwork'] ?? "",
+                                streamUrl: likedSong['streamUrl'] ?? "",
+                              ),
+                            );
+                          },
+                          child: ListTile(
+                            //   contentPadding: EdgeInsets.zero,
+                            dense: true,
+
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(7),
+                              child: Image.network(
+                                likedSong['artwork'],
+                                fit: BoxFit.cover,
+                                height: 50,
+                                width: 50,
+                              ),
+                            ),
+                            title: Text(
+                              likedSong['title'],
+                              maxLines: 1,
+
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            subtitle: Text(
+                              likedSong['artist'],
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            trailing: Icon(
+                              Icons.more_vert,
+                              size: 26,
+                              color: Colors.grey,
+                            ),
+                          ),
                         ),
                       );
                     },
-                    child: GestureDetector(
-                      onTap: () {
-                        context.read<TrackProvider>().setSongAndPlay(
-                          TrackModel(
-                            id: likedSong['id'] ?? "",
-                            title: likedSong['title'] ?? "",
-                            artist: likedSong['artist'] ?? "",
-                            duration: likedSong['duration'] ?? "",
-                            isStreamable: likedSong['isStreamable'] ?? "",
-                            artwork: likedSong['artwork'] ?? "",
-                            streamUrl: likedSong['streamUrl'] ?? "",
-                          ),
-                        );
-                      },
-                      child: ListTile(
-                        //   contentPadding: EdgeInsets.zero,
-                        dense: true,
-
-                        leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(7),
-                          child: Image.network(
-                            likedSong['artwork'],
-                            fit: BoxFit.cover,
-                            height: 50,
-                            width: 50,
-                          ),
-                        ),
-                        title: Text(
-                          likedSong['title'],
-                          maxLines: 1,
-
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        subtitle: Text(
-                          likedSong['artist'],
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        trailing: Icon(
-                          Icons.more_vert,
-                          size: 26,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
                   );
                 },
               ),

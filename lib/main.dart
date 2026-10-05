@@ -11,6 +11,7 @@ import 'package:sf/screens/library_screen.dart';
 import 'package:sf/screens/search_screen.dart';
 import 'package:sf/screens/settings_screen.dart';
 import 'package:sf/widgets/mini_player.dart';
+import 'package:sf/widgets/notch_player.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +24,15 @@ void main() async {
 
   runApp(
     ChangeNotifierProvider(create: (_) => TrackProvider(), child: MyApp()),
+  );
+}
+
+@pragma("vm:entry-point")
+void overlayPopUp() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(
+    const MaterialApp(debugShowCheckedModeBanner: false, home: NotchPlayer()),
   );
 }
 
@@ -39,13 +49,11 @@ class NavigationBar extends StatefulWidget {
   const NavigationBar({super.key});
 
   @override
-  State<NavigationBar> createState() => _MyAppState();
+  State<NavigationBar> createState() => _NavigationBarState();
 }
 
-class _MyAppState extends State<NavigationBar> {
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
-  final List<Widget> screen = const [
+class _NavigationBarState extends State<NavigationBar> {
+  final List<Widget> screens = const [
     HomeScreen(),
     SearchScreen(),
     LibraryScreen(),
@@ -56,23 +64,15 @@ class _MyAppState extends State<NavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    final player = context.watch<TrackProvider>();
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black,
 
       body: Stack(
         children: [
-          // SCREEN
-          Navigator(
-            key: navigatorKey,
-            onGenerateRoute: (settings) {
-              return MaterialPageRoute(builder: (_) => screen[currentIndex]);
-            },
-          ),
+          IndexedStack(index: currentIndex, children: screens),
 
-          // GRADIENT ONLY
+          // GRADIENT
           Positioned(
             left: 0,
             right: 0,
@@ -87,7 +87,7 @@ class _MyAppState extends State<NavigationBar> {
                     colors: [
                       Colors.transparent,
                       Color.fromARGB(120, 0, 0, 0),
-                      Color.fromARGB(220, 0, 0, 0),
+                      Color.fromARGB(210, 0, 0, 0),
                       Colors.black,
                     ],
                     stops: [0.0, 0.45, 0.75, 1.0],
@@ -97,7 +97,7 @@ class _MyAppState extends State<NavigationBar> {
             ),
           ),
 
-          // CONTROLS
+          // MINIPLAYER + BOTTOM NAVIGATION
           Positioned(
             left: 0,
             right: 0,
@@ -105,21 +105,28 @@ class _MyAppState extends State<NavigationBar> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (player.currentSong != null)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: MiniPlayer(
-                      song: player.currentSong!,
-                      onPlayPause: () {
-                        if (player.isPlaying) {
-                          player.pause();
-                        } else {
-                          player.resume();
-                        }
-                      },
-                      onTap: () {},
-                    ),
-                  ),
+                Consumer<TrackProvider>(
+                  builder: (context, player, child) {
+                    if (player.currentSong == null) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: MiniPlayer(
+                        song: player.currentSong!,
+                        onPlayPause: () {
+                          if (player.isPlaying) {
+                            player.pause();
+                          } else {
+                            player.resume();
+                          }
+                        },
+                        onTap: () {},
+                      ),
+                    );
+                  },
+                ),
 
                 BottomNavigationBar(
                   type: BottomNavigationBarType.fixed,
@@ -135,12 +142,8 @@ class _MyAppState extends State<NavigationBar> {
                     setState(() {
                       currentIndex = value;
                     });
-
-                    navigatorKey.currentState!.pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (_) => screen[value]),
-                      (route) => false,
-                    );
                   },
+
                   items: const [
                     BottomNavigationBarItem(
                       icon: Icon(Icons.home_filled),

@@ -59,7 +59,7 @@ class _RecentsScreenState extends State<RecentsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final player = context.watch<TrackProvider>();
+    // final player = context.watch<TrackProvider>();
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
       appBar: AppBar(
@@ -159,265 +159,301 @@ class _RecentsScreenState extends State<RecentsScreen> {
                   );
                 },
               )
-            : player.recentSongs().length != 0
-            ? Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 7,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        log("Recent songs :${recentResult.length}");
-                        for (TrackModel i in recentResult) {
-                          log(i.title);
-                          log(i.id);
-                          log("----------");
-                        }
-                      },
-                      child: Text(
-                        "Recents",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: player.recentSongs().length + 1,
-                        itemBuilder: (context, index) {
-                          if (index == player.recentSongs().length) {
-                            return Column(
-                              children: [
-                                const SizedBox(height: 25),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    GestureDetector(
+            : Consumer<TrackProvider>(
+                builder: (context, player, child) {
+                  final recentSongs = player.recentSongs();
+                  final likedSongs = player.likedSongs();
+
+                  return recentSongs.length != 0
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0,
+                            vertical: 7,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  log("Recent songs :${recentResult.length}");
+                                  for (TrackModel i in recentResult) {
+                                    log(i.title);
+                                    log(i.id);
+                                    log("----------");
+                                  }
+                                },
+                                child: Text(
+                                  "Recents",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: recentSongs.length + 1,
+                                  itemBuilder: (context, index) {
+                                    if (index == recentSongs.length) {
+                                      return Column(
+                                        children: [
+                                          const SizedBox(height: 25),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  showAdaptiveDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog.adaptive(
+                                                        backgroundColor:
+                                                            const Color(
+                                                              0xFF121212,
+                                                            ),
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadiusGeometry.circular(
+                                                                8,
+                                                              ),
+                                                        ),
+                                                        content: Text(
+                                                          "Are you sure want to clear your recent searches?",
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              Navigator.pop(
+                                                                context,
+                                                              );
+                                                            },
+                                                            child: Text(
+                                                              "CANCEL",
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .green,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          TextButton(
+                                                            onPressed: () async {
+                                                              await player
+                                                                  .removeAllrecentSong();
+                                                              Navigator.pop(
+                                                                context,
+                                                              );
+                                                            },
+                                                            child: Text(
+                                                              "CLEAR",
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .green,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                                child: Container(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        horizontal: 7,
+                                                        vertical: 7,
+                                                      ),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          20,
+                                                        ),
+                                                    border: Border.all(
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                  child: const Text(
+                                                    "Clear recent searches",
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 30),
+                                        ],
+                                      );
+                                    }
+                                    final recentContent = recentSongs[index];
+                                    bool isLiked = likedSongs.any(
+                                      (song) =>
+                                          song['id'] == recentContent['id'],
+                                    );
+                                    TrackModel currentTrack = TrackModel(
+                                      id: recentContent['id'] ?? "",
+                                      title: recentContent['title'] ?? "",
+                                      artist: recentContent['artist'] ?? "",
+                                      duration: recentContent['duration'] ?? "",
+                                      isStreamable:
+                                          recentContent['isStreamable'] ?? "",
+                                      artwork: recentContent['artwork'] ?? "",
+                                      streamUrl:
+                                          recentContent['streamUrl'] ?? "",
+                                    );
+                                    return GestureDetector(
                                       onTap: () {
-                                        showAdaptiveDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog.adaptive(
-                                              backgroundColor: const Color(
-                                                0xFF121212,
-                                              ),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadiusGeometry.circular(
-                                                      8,
-                                                    ),
-                                              ),
-                                              content: Text(
-                                                "Are you sure want to clear your recent searches?",
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: Text(
-                                                    "CANCEL",
-                                                    style: TextStyle(
-                                                      color: Colors.green,
-                                                    ),
-                                                  ),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () async {
-                                                    await player
-                                                        .removeAllrecentSong();
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: Text(
-                                                    "CLEAR",
-                                                    style: TextStyle(
-                                                      color: Colors.green,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            );
-                                          },
+                                        player.setSongAndPlay(
+                                          TrackModel(
+                                            id: recentContent['id'] ?? "",
+                                            title: recentContent['title'] ?? "",
+                                            artist:
+                                                recentContent['artist'] ?? "",
+                                            duration:
+                                                recentContent['duration'] ?? "",
+                                            isStreamable:
+                                                recentContent['isStreamable'] ??
+                                                "",
+                                            artwork:
+                                                recentContent['artwork'] ?? "",
+                                            streamUrl:
+                                                recentContent['streamUrl'] ??
+                                                "",
+                                          ),
                                         );
                                       },
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 7,
-                                          vertical: 7,
-                                        ),
-                                        decoration: BoxDecoration(
+                                      child: ListTile(
+                                        contentPadding: EdgeInsets.zero,
+                                        dense: true,
+                                        leading: ClipRRect(
                                           borderRadius: BorderRadius.circular(
-                                            20,
+                                            7,
                                           ),
-                                          border: Border.all(
-                                            color: Colors.grey,
+                                          child: Image.network(
+                                            recentContent['artwork'],
+                                            fit: BoxFit.cover,
+                                            height: 47,
+                                            width: 47,
                                           ),
                                         ),
-                                        child: const Text(
-                                          "Clear recent searches",
+                                        title: Text(
+                                          recentContent['title'],
                                           maxLines: 1,
+
                                           style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 13,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.w600,
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 30),
-                              ],
-                            );
-                          }
-                          final recentContent = player.recentSongs()[index];
-                          bool isLiked = player.likedSongs().any(
-                            (song) => song['id'] == recentContent['id'],
-                          );
-                          TrackModel currentTrack = TrackModel(
-                            id: recentContent['id'] ?? "",
-                            title: recentContent['title'] ?? "",
-                            artist: recentContent['artist'] ?? "",
-                            duration: recentContent['duration'] ?? "",
-                            isStreamable: recentContent['isStreamable'] ?? "",
-                            artwork: recentContent['artwork'] ?? "",
-                            streamUrl: recentContent['streamUrl'] ?? "",
-                          );
-                          return GestureDetector(
-                            onTap: () {
-                              context.read<TrackProvider>().setSongAndPlay(
-                                TrackModel(
-                                  id: recentContent['id'] ?? "",
-                                  title: recentContent['title'] ?? "",
-                                  artist: recentContent['artist'] ?? "",
-                                  duration: recentContent['duration'] ?? "",
-                                  isStreamable:
-                                      recentContent['isStreamable'] ?? "",
-                                  artwork: recentContent['artwork'] ?? "",
-                                  streamUrl: recentContent['streamUrl'] ?? "",
-                                ),
-                              );
-                            },
-                            child: ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              dense: true,
-                              leading: ClipRRect(
-                                borderRadius: BorderRadius.circular(7),
-                                child: Image.network(
-                                  recentContent['artwork'],
-                                  fit: BoxFit.cover,
-                                  height: 47,
-                                  width: 47,
-                                ),
-                              ),
-                              title: Text(
-                                recentContent['title'],
-                                maxLines: 1,
+                                        subtitle: Text(
+                                          recentContent['artist'],
+                                          style: TextStyle(color: Colors.grey),
+                                        ),
+                                        trailing: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const SizedBox(width: 8),
+                                            GestureDetector(
+                                              onTap: () async {
+                                                log("Like the song pressed");
 
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              subtitle: Text(
-                                recentContent['artist'],
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const SizedBox(width: 8),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      log("Like the song pressed");
+                                                if (!isLiked)
+                                                  await player.saveLikedSongs(
+                                                    currentTrack,
+                                                  );
+                                                else
+                                                  await player.removeLikedSong(
+                                                    currentTrack.id,
+                                                  );
 
-                                      if (!isLiked)
-                                        await player.saveLikedSongs(
-                                          currentTrack,
-                                        );
-                                      else
-                                        await player.removeLikedSong(
-                                          currentTrack.id,
-                                        );
+                                                setState(() {});
 
-                                      setState(() {});
-
-                                      log(
-                                        player.likedSongs().length.toString(),
-                                      );
-                                    },
-                                    child: !isLiked
-                                        ? Icon(
-                                            Icons.add_circle_outline,
-                                            color: Colors.grey,
-                                            size: 20,
-                                          )
-                                        : Icon(
-                                            Icons.check_circle,
-                                            color: const Color.fromARGB(
-                                              255,
-                                              92,
-                                              214,
-                                              96,
+                                                log(
+                                                  likedSongs.length.toString(),
+                                                );
+                                              },
+                                              child: !isLiked
+                                                  ? Icon(
+                                                      Icons.add_circle_outline,
+                                                      color: Colors.grey,
+                                                      size: 20,
+                                                    )
+                                                  : Icon(
+                                                      Icons.check_circle,
+                                                      color:
+                                                          const Color.fromARGB(
+                                                            255,
+                                                            92,
+                                                            214,
+                                                            96,
+                                                          ),
+                                                      size: 20,
+                                                    ),
                                             ),
-                                            size: 20,
-                                          ),
-                                  ),
-                                  const SizedBox(width: 25),
-                                  GestureDetector(
-                                    onTap: () {
-                                      player.removeRecentSong(currentTrack.id);
-                                    },
-                                    child: Icon(
-                                      Icons.close,
-                                      color: Colors.grey,
-                                      size: 26,
-                                    ),
-                                  ),
-                                ],
+                                            const SizedBox(width: 25),
+                                            GestureDetector(
+                                              onTap: () {
+                                                player.removeRecentSong(
+                                                  currentTrack.id,
+                                                );
+                                              },
+                                              child: Icon(
+                                                Icons.close,
+                                                color: Colors.grey,
+                                                size: 26,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
+                            ],
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Play what you love",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 21,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Text(
+                                  "Search for artists, songs, playlists, podcasts and more.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 15.5,
+                                  ),
+                                ),
+                              ],
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            : Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Play what you love",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 21,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        "Search for artists, songs, playlists, podcasts and more.",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey, fontSize: 15.5),
-                      ),
-                    ],
-                  ),
-                ),
+                          ),
+                        );
+                },
               ),
       ),
     );

@@ -18,7 +18,6 @@ class LibraryScreen extends StatefulWidget {
 class _LibraryScreenState extends State<LibraryScreen> {
   @override
   Widget build(BuildContext context) {
-    final tracker = context.watch<TrackProvider>();
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
       body: Container(
@@ -248,63 +247,72 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     ],
                   ),
                   //
-                  ListView.builder(
-                    itemCount: tracker.allplaylistsName().length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
+                  Consumer<TrackProvider>(
+                    builder: (context, tracker, child) {
+                      final playlists = tracker.allplaylistsName();
+                      return ListView.builder(
+                        itemCount: tracker.allplaylistsName().length,
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
 
-                    itemBuilder: (context, index) {
-                      final playlistname = tracker.allplaylistsName()[index];
+                        itemBuilder: (context, index) {
+                          final playlistname = tracker
+                              .allplaylistsName()[index];
 
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  PlaylistHome(pname: playlistname),
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      PlaylistHome(pname: playlistname),
+                                ),
+                              );
+                            },
+                            child: ListTile(
+                              contentPadding: EdgeInsets.zero,
+
+                              leading: Container(
+                                height: 62,
+                                width: 62,
+
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    Icons.headphones,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              title: Text(
+                                playlistname,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              subtitle: Row(
+                                children: [
+                                  Text(
+                                    " Playlist • Username",
+                                    style: TextStyle(
+                                      color: const Color.fromARGB(
+                                        255,
+                                        159,
+                                        159,
+                                        159,
+                                      ),
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-
-                          leading: Container(
-                            height: 62,
-                            width: 62,
-
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Center(
-                              child: Icon(
-                                Icons.headphones,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          title: Text(
-                            playlistname,
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                          subtitle: Row(
-                            children: [
-                              Text(
-                                " Playlist • Username",
-                                style: TextStyle(
-                                  color: const Color.fromARGB(
-                                    255,
-                                    159,
-                                    159,
-                                    159,
-                                  ),
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                       );
                     },
                   ),
