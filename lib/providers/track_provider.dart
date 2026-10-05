@@ -94,7 +94,7 @@ class TrackProvider extends ChangeNotifier {
       'playCount': 1,
     });
     await mostPlayedBox.put('song7', {
-      'id': 'song1',
+      'id': 'song7',
       'title': 'OK',
       'artist': 'The Weeknd',
       'duration': 200,
