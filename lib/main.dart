@@ -11,7 +11,6 @@ import 'package:sf/screens/library_screen.dart';
 import 'package:sf/screens/search_screen.dart';
 import 'package:sf/screens/settings_screen.dart';
 import 'package:sf/widgets/mini_player.dart';
-import 'package:sf/widgets/notch_player.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,15 +23,6 @@ void main() async {
 
   runApp(
     ChangeNotifierProvider(create: (_) => TrackProvider(), child: MyApp()),
-  );
-}
-
-@pragma("vm:entry-point")
-void overlayPopUp() {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  runApp(
-    const MaterialApp(debugShowCheckedModeBanner: false, home: NotchPlayer()),
   );
 }
 

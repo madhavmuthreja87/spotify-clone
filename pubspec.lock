@@ -118,6 +118,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_app_group_directory:
+    dependency: transitive
+    description:
+      name: flutter_app_group_directory
+      sha256: "680ef9b2dee84c237cd7bb7fc78bc45867b32556a8a5f0de61278078b9fefd05"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -176,6 +184,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
+  image:
+    dependency: transitive
+    description:
+      name: image
+      sha256: a1e7f4951e538a568e14b856702afc9ae1d2f4b202daced8d22c1b9cd211ce89
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.10.1"
   jni:
     dependency: transitive
     description:
@@ -256,14 +272,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.0"
-  live_activity_kit:
+  live_activities:
     dependency: "direct main"
     description:
-      name: live_activity_kit
-      sha256: "8a026fbd0149410f85c3e037f2bc1be4a744ba0317a8591b7bd871f595d223e9"
+      name: live_activities
+      sha256: c9027276d87d0c04a24174495a7f235708e5b189ef5bd86a42004d85d3c5fb28
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.1"
+    version: "2.6.0"
   logging:
     dependency: transitive
     description:
@@ -309,14 +325,6 @@ packages:
     description:
       name: nested
       sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
-  notch:
-    dependency: "direct main"
-    description:
-      name: notch
-      sha256: d714eeb06a788868c9ec75b57c55284f75c51ffb78b0ca6f0e86f49dca0e256f
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
@@ -408,6 +416,54 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
+  permission_handler:
+    dependency: transitive
+    description:
+      name: permission_handler
+      sha256: e6bcecadfe40df6b888141f23cbaf6ba6c3da49fb33f6ff887d060dd48544fbd
+      url: "https://pub.dev"
+    source: hosted
+    version: "13.0.2"
+  permission_handler_android:
+    dependency: transitive
+    description:
+      name: permission_handler_android
+      sha256: b1ce660f4d0dcaffdf2605a19544c129fb5adda4e6fd039992ae356c4e437039
+      url: "https://pub.dev"
+    source: hosted
+    version: "14.1.0"
+  permission_handler_apple:
+    dependency: transitive
+    description:
+      name: permission_handler_apple
+      sha256: "066bbbc60031b63b916a3871e7bb4b6a8c5e7cec8146dafec53d1da304eff0a5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.6.2"
+  permission_handler_html:
+    dependency: transitive
+    description:
+      name: permission_handler_html
+      sha256: "6ea98b3f17f60d3b527f2647ed2ab4dc0f6bfe25b22cb1c363f5d8f62252f6ac"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.4+1"
+  permission_handler_platform_interface:
+    dependency: transitive
+    description:
+      name: permission_handler_platform_interface
+      sha256: ed86a61c190258fdd65de395ea0632822e3415c1faec38eae0c31b479c28a531
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.4.1"
+  permission_handler_windows:
+    dependency: transitive
+    description:
+      name: permission_handler_windows
+      sha256: caeae01858a0a7d2df67a445ac98e1ad95e55a0e77c73044f4e9b1c8c2289cbd
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.2"
   platform:
     dependency: transitive
     description:

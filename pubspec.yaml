@@ -43,10 +43,14 @@ dependencies:
   lottie: 
 
 
-  live_activity_kit: ^1.1.1
-  notch:
-  overlay_pop_up: ^1.0.6+6
+  # live_activity_kit: ^1.1.1
+  # notch:
+  # overlay_pop_up: ^1.0.6+6
 
+  live_activities: 
+
+  overlay_pop_up: 
+ 
 dev_dependencies:
   flutter_test:
     sdk: flutter

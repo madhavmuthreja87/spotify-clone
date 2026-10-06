@@ -1,0 +1,5 @@
+[33me307313[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Iphone ios files are configured by dart run live_activity_kit:setup done and now app is running on any device after changing compilesdkversion to 36
+[33m33cc8d2[m Live activity enabled but debugging required
+[33m1093140[m Getting fresh streamUrl ,most playedSong Local Storage started,temporary data of 7 songs added for atleast app does'nt crash,set and play song updated very much
+[33m18a9dae[m Song added to already playlist will not show on recommended songs list and songs are geeting entered from recommended songs list to main playlist
+[33mec0af51[m Navigation from playlist tile to playlist Home screen done
