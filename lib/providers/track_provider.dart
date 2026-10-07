@@ -1,16 +1,21 @@
 import 'dart:developer';
 
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
 import 'package:just_audio/just_audio.dart';
 
+import 'package:sf/audio_handler.dart';
 import 'package:sf/audis_api.dart';
 import 'package:sf/models/track_model.dart';
 
 class TrackProvider extends ChangeNotifier {
-  final AudioPlayer player = AudioPlayer();
-  TrackModel? currentSong;
+  // The handler owns the real player, so the notification, lock screen
+  // and in-app controls all control the same thing.
+  final MyAudioHandler handler;
+  AudioPlayer get player => handler.player;
 
+  TrackModel? currentSong;
   bool isPlaying = false;
 
   final Box recentBox = Hive.box("recentSongs");
@@ -18,12 +23,14 @@ class TrackProvider extends ChangeNotifier {
   final Box playlistBox = Hive.box("playlistBox");
   final Box mostPlayedBox = Hive.box("mostPlayedBox");
 
-  TrackProvider() {
+  TrackProvider(this.handler) {
     player.playingStream.listen((playing) {
       isPlaying = playing;
       notifyListeners();
     });
   }
+
+  // DEBUG ONLY: clears the box. Never call this in release builds.
   Future<void> addTemporaryMostPlayedData() async {
     await mostPlayedBox.clear();
 
@@ -92,6 +99,7 @@ class TrackProvider extends ChangeNotifier {
       'streamUrl': 'https://example.com/song6.mp3',
       'playCount': 1,
     });
+
     await mostPlayedBox.put('song7', {
       'id': 'song7',
       'title': 'OK',
@@ -110,6 +118,19 @@ class TrackProvider extends ChangeNotifier {
     try {
       currentSong = song;
       notifyListeners();
+
+      // Feeds the notification, lock screen and Dynamic Island.
+      handler.mediaItem.add(
+        MediaItem(
+          id: song.id.toString(),
+          title: song.title.toString(),
+          artist: song.artist.toString(),
+          artUri: Uri.tryParse('${song.artwork ?? ''}'),
+          duration: Duration(
+            seconds: int.tryParse(song.duration.toString()) ?? 0,
+          ),
+        ),
+      );
 
       await saveRecentSongs(song);
 
@@ -130,9 +151,8 @@ class TrackProvider extends ChangeNotifier {
       } catch (e) {
         log("Old stream URL failed. Getting fresh URL...");
 
-        // URL may have expired → get a new signed URL
+        // URL may have expired -> get a new signed URL
         final freshUrl = await AudisApi().getFreshStreamUrl(song.id);
-        // currentSong?.streamUrl = freshUrl;
         await player.setUrl(freshUrl);
         await player.play();
 
@@ -154,24 +174,19 @@ class TrackProvider extends ChangeNotifier {
   Future<void> pause() async {
     isPlaying = false;
     notifyListeners();
-    await player.pause();
-    if (currentSong != null) notifyListeners();
+    await handler.pause();
   }
 
   Future<void> resume() async {
     isPlaying = true;
     notifyListeners();
-    await player.play();
-
-    notifyListeners();
+    await handler.play();
   }
 
   Future<void> stop() async {
     isPlaying = false;
     notifyListeners();
-    await player.stop();
-
-    notifyListeners();
+    await handler.stop();
   }
 
   Future<void> saveRecentSongs(TrackModel song) async {
@@ -189,7 +204,11 @@ class TrackProvider extends ChangeNotifier {
   }
 
   Future<void> recordSongPlayedCount(TrackModel song) async {
-    final currentCount = mostPlayedBox.get(song.id, defaultValue: 0);
+    // Fixed: the box stores a Map, not an int, so read playCount from it.
+    final existing = mostPlayedBox.get(song.id);
+    final currentCount = existing == null
+        ? 0
+        : (existing['playCount'] as int? ?? 0);
 
     await mostPlayedBox.put(song.id, {
       'id': song.id,
@@ -247,6 +266,9 @@ class TrackProvider extends ChangeNotifier {
       'artwork': song.artwork,
       'streamUrl': song.streamUrl,
     });
+
+    // Added: refresh the UI after liking a song.
+    notifyListeners();
   }
 
   List<Map> likedSongs() {
@@ -262,20 +284,14 @@ class TrackProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  //PlayList creation with putting songs into it
-  // final List<Map<String, List<TrackModel>?>> playlists = [];
-
+  // Playlist creation and adding songs into it
   Future<void> createPlaylist(String pname) async {
     await playlistBox.put(pname, []);
-
-    // playlists.add({pname: []});
-
     notifyListeners();
   }
 
   Future<void> removePlaylist(String pname) async {
     await playlistBox.delete(pname);
-
     notifyListeners();
   }
 
@@ -300,13 +316,12 @@ class TrackProvider extends ChangeNotifier {
   }
 
   Future<void> removeFromPlaylist(String pname, String songID) async {
-    final existingPlaylist = playlistBox.get(
-      pname,
-      defaultValue: <TrackModel>[],
-    );
+    final stored = playlistBox.get(pname, defaultValue: <Map>[]);
 
-    if (existingPlaylist == null) return;
+    if (stored == null) return;
 
+    // Copy into a fresh typed list before modifying.
+    final existingPlaylist = List<Map>.from(stored);
     existingPlaylist.removeWhere((song) => song['id'] == songID);
 
     await playlistBox.put(pname, existingPlaylist);
@@ -326,8 +341,7 @@ class TrackProvider extends ChangeNotifier {
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    player.dispose();
+    // The handler owns the player, so don't dispose it here.
     super.dispose();
   }
 }

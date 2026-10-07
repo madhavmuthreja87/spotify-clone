@@ -47,9 +47,11 @@ dependencies:
   # notch:
   # overlay_pop_up: ^1.0.6+6
 
+  audio_service: 
+  audio_session:
+
   live_activities: 
 
-  overlay_pop_up: 
  
 dev_dependencies:
   flutter_test:

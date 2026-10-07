@@ -1,9 +1,9 @@
-import 'dart:ui';
-
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
+import 'package:sf/audio_handler.dart';
 import 'package:sf/providers/track_provider.dart';
 import 'package:sf/screens/home_screen.dart';
 import 'package:sf/screens/library_screen.dart';
@@ -11,6 +11,8 @@ import 'package:sf/screens/library_screen.dart';
 import 'package:sf/screens/search_screen.dart';
 import 'package:sf/screens/settings_screen.dart';
 import 'package:sf/widgets/mini_player.dart';
+
+import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,8 +23,20 @@ void main() async {
   await Hive.openBox("playlistBox");
   await Hive.openBox("mostPlayedBox");
 
+  await Permission.notification.request();
+  final handler = await AudioService.init<MyAudioHandler>(
+    builder: () => MyAudioHandler(),
+    config: const AudioServiceConfig(
+      androidNotificationChannelId: 'com.sf.audio',
+      androidNotificationChannelName: 'Playback',
+      androidNotificationOngoing: true,
+    ),
+  );
   runApp(
-    ChangeNotifierProvider(create: (_) => TrackProvider(), child: MyApp()),
+    ChangeNotifierProvider(
+      create: (_) => TrackProvider(handler),
+      child: MyApp(),
+    ),
   );
 }
 
