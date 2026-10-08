@@ -77,149 +77,159 @@ class _MiniPlayerState extends State<MiniPlayer> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => PlayerScreen(
-              song: widget.song,
-              // onPlayPause: widget.onPlayPause,
-            ),
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return PlayerScreen(song: widget.song);
+            },
+            transitionDuration: const Duration(milliseconds: 420),
+            reverseTransitionDuration: const Duration(milliseconds: 350),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  const begin = Offset(0.0, 1.0);
+                  const end = Offset.zero;
+
+                  final tween = Tween(
+                    begin: begin,
+                    end: end,
+                  ).chain(CurveTween(curve: Curves.easeOutCubic));
+
+                  return SlideTransition(
+                    position: animation.drive(tween),
+                    child: child,
+                  );
+                },
           ),
         );
       },
-      child: Hero(
-        tag: widget.song.id,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeInOut,
-          height: 54,
-          width: MediaQuery.sizeOf(context).width / 1.09,
-          decoration: BoxDecoration(
-            color: backgroundColor.withValues(alpha: 1),
-            //     gradient: LinearGradient(colors: [backgroundColor.withValues()]),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 6),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeInOut,
+        height: 54,
+        width: MediaQuery.sizeOf(context).width / 1.09,
+        decoration: BoxDecoration(
+          color: backgroundColor.withValues(alpha: 1),
+          //     gradient: LinearGradient(colors: [backgroundColor.withValues()]),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 6),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          // child: Image.network(
-                          //   widget.song.artwork ?? "",
-                          //   fit: BoxFit.cover,
-                          //   height: 40,
-                          //   width: 40,
-                          // ),
-                          child: CachedNetworkImage(
-                            imageUrl: widget.song.artwork ?? "",
-                            fit: BoxFit.cover,
-                            height: 40,
-                            width: 40,
-                          ),
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(6),
+                        // child: Image.network(
+                        //   widget.song.artwork ?? "",
+                        //   fit: BoxFit.cover,
+                        //   height: 40,
+                        //   width: 40,
+                        // ),
+                        child: CachedNetworkImage(
+                          imageUrl: widget.song.artwork ?? "",
+                          fit: BoxFit.cover,
+                          height: 40,
+                          width: 40,
                         ),
-                        const SizedBox(width: 8),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Text(
-                              widget.song.title.length > 20
-                                  ? widget.song.title.substring(0, 20) + "..."
-                                  : widget.song.title,
-                              maxLines: 1,
-                              overflow: TextOverflow.fade,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12.7,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            // Text(widget.song.artist),
-                            const SizedBox(height: 8),
-                          ],
-                        ),
-                      ],
-                    ),
-
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            if (tracker.isPlaying) {
-                              tracker.pause();
-                            } else {
-                              tracker.resume();
-                            }
-                          },
-                          child: Icon(
-                            tracker.isPlaying
-                                ? Icons.pause
-                                : Icons.play_arrow_rounded,
-                            size: 34,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 3.0,
-                  vertical: 0,
-                ),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: StreamBuilder<Duration>(
-                    stream: player.positionStream,
-                    builder: (context, snapshot) {
-                      final position = snapshot.data ?? Duration.zero;
-                      final duration = player.duration ?? Duration.zero;
-                      return Column(
+                      ),
+                      const SizedBox(width: 8),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          SliderTheme(
-                            data: SliderTheme.of(context).copyWith(
-                              overlayShape: SliderComponentShape.noOverlay,
-                              trackShape: const RoundedRectSliderTrackShape(),
-                              thumbColor: Colors.white,
-                              inactiveTrackColor: Colors.grey,
-                              activeTrackColor: Colors.white,
-                              trackHeight: 1.6,
-
-                              thumbShape: const RoundSliderThumbShape(
-                                enabledThumbRadius: 0,
-                              ),
-                            ),
-
-                            child: Slider(
-                              min: 0,
-                              max: duration.inSeconds.toDouble(),
-                              value: position.inSeconds.toDouble().clamp(
-                                0,
-                                duration.inSeconds.toDouble(),
-                              ),
-                              onChanged: (value) {
-                                player.seek(Duration(seconds: value.toInt()));
-                              },
+                          Text(
+                            widget.song.title.length > 20
+                                ? widget.song.title.substring(0, 20) + "..."
+                                : widget.song.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.fade,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12.7,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
+                          // Text(widget.song.artist),
+                          const SizedBox(height: 8),
                         ],
-                      );
-                    },
+                      ),
+                    ],
                   ),
+
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          if (tracker.isPlaying) {
+                            tracker.pause();
+                          } else {
+                            tracker.resume();
+                          }
+                        },
+                        child: Icon(
+                          tracker.isPlaying
+                              ? Icons.pause
+                              : Icons.play_arrow_rounded,
+                          size: 34,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 0),
+              child: SizedBox(
+                width: double.infinity,
+                child: StreamBuilder<Duration>(
+                  stream: player.positionStream,
+                  builder: (context, snapshot) {
+                    final position = snapshot.data ?? Duration.zero;
+                    final duration = player.duration ?? Duration.zero;
+                    return Column(
+                      children: [
+                        SliderTheme(
+                          data: SliderTheme.of(context).copyWith(
+                            overlayShape: SliderComponentShape.noOverlay,
+                            trackShape: const RoundedRectSliderTrackShape(),
+                            thumbColor: Colors.white,
+                            inactiveTrackColor: Colors.grey,
+                            activeTrackColor: Colors.white,
+                            trackHeight: 1.6,
+
+                            thumbShape: const RoundSliderThumbShape(
+                              enabledThumbRadius: 0,
+                            ),
+                          ),
+
+                          child: Slider(
+                            min: 0,
+                            max: duration.inSeconds.toDouble(),
+                            value: position.inSeconds.toDouble().clamp(
+                              0,
+                              duration.inSeconds.toDouble(),
+                            ),
+                            onChanged: (value) {
+                              player.seek(Duration(seconds: value.toInt()));
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
