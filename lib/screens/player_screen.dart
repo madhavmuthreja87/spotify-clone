@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:palette_generator_plus/palette_generator_plus.dart';
@@ -120,8 +121,14 @@ class _PlayerScreenState extends State<PlayerScreen>
                       elevation: 20,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          widget.song.artwork!,
+                        // child: Image.network(
+                        //   widget.song.artwork!,
+                        //   fit: BoxFit.cover,
+                        //   height: 320,
+                        //   width: 340,
+                        // ),
+                        child: CachedNetworkImage(
+                          imageUrl: widget.song.artwork!,
                           fit: BoxFit.cover,
                           height: 320,
                           width: 340,

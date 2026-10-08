@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sf/audis_api.dart';
@@ -134,13 +135,20 @@ class _RecentsScreenState extends State<RecentsScreen> {
 
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(7),
-                        child: Image.network(
-                          searchContent.artwork!,
+                        // child: Image.network(
+                        //   searchContent.artwork!,
+                        //   fit: BoxFit.cover,
+                        //   height: 50,
+                        //   width: 50,
+                        // ),
+                        child: CachedNetworkImage(
+                          imageUrl: searchContent.artwork!,
                           fit: BoxFit.cover,
                           height: 50,
                           width: 50,
                         ),
                       ),
+
                       title: Text(
                         searchContent.title,
                         maxLines: 1,
@@ -342,8 +350,14 @@ class _RecentsScreenState extends State<RecentsScreen> {
                                           borderRadius: BorderRadius.circular(
                                             7,
                                           ),
-                                          child: Image.network(
-                                            recentContent['artwork'],
+                                          // child: Image.network(
+                                          //   recentContent['artwork'],
+                                          //   fit: BoxFit.cover,
+                                          //   height: 47,
+                                          //   width: 47,
+                                          // ),
+                                          child: CachedNetworkImage(
+                                            imageUrl: recentContent['artwork'],
                                             fit: BoxFit.cover,
                                             height: 47,
                                             width: 47,

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sf/providers/track_provider.dart';
@@ -144,7 +145,7 @@ class _LikedSongsState extends State<LikedSongs> {
                               Icon(
                                 Icons.shuffle,
                                 color: const Color.fromARGB(255, 36, 206, 41),
-                                size: 40,
+                                size: 37,
                               ),
                               Icon(
                                 Icons.play_circle_filled_outlined,
@@ -261,8 +262,14 @@ class _LikedSongsState extends State<LikedSongs> {
 
                             leading: ClipRRect(
                               borderRadius: BorderRadius.circular(7),
-                              child: Image.network(
-                                likedSong['artwork'],
+                              // child: Image.network(
+                              //   likedSong['artwork'],
+                              //   fit: BoxFit.cover,
+                              //   height: 50,
+                              //   width: 50,
+                              // ),
+                              child: CachedNetworkImage(
+                                imageUrl: likedSong['artwork'],
                                 fit: BoxFit.cover,
                                 height: 50,
                                 width: 50,

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:palette_generator_plus/palette_generator_plus.dart';
 import 'package:provider/provider.dart';
@@ -240,8 +241,14 @@ class _PlaylistHomeState extends State<PlaylistHome> {
 
                                     leading: ClipRRect(
                                       borderRadius: BorderRadius.circular(7),
-                                      child: Image.network(
-                                        songinplaylist['artwork'],
+                                      // child: Image.network(
+                                      //   songinplaylist['artwork'],
+                                      //   fit: BoxFit.cover,
+                                      //   height: 47,
+                                      //   width: 47,
+                                      // ),
+                                      child: CachedNetworkImage(
+                                        imageUrl: songinplaylist['artwork'],
                                         fit: BoxFit.cover,
                                         height: 47,
                                         width: 47,
@@ -368,8 +375,15 @@ class _PlaylistHomeState extends State<PlaylistHome> {
                                                 leading: ClipRRect(
                                                   borderRadius:
                                                       BorderRadius.circular(7),
-                                                  child: Image.network(
-                                                    recentContent['artwork'],
+                                                  // child: Image.network(
+                                                  //   recentContent['artwork'],
+                                                  //   fit: BoxFit.cover,
+                                                  //   height: 47,
+                                                  //   width: 47,
+                                                  // ),
+                                                  child: CachedNetworkImage(
+                                                    imageUrl:
+                                                        recentContent['artwork'],
                                                     fit: BoxFit.cover,
                                                     height: 47,
                                                     width: 47,

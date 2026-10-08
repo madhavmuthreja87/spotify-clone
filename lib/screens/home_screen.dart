@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sf/audis_api.dart';
@@ -267,10 +268,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               // Image
                               ClipRRect(
                                 borderRadius: BorderRadiusGeometry.circular(5),
-                                child: Image.network(
-                                  song['artwork'],
-                                  width: 51,
-                                  height: double.infinity,
+                                // child: Image.network(
+                                //   song['artwork'],
+                                //   width: 51,
+                                //   height: double.infinity,
+                                //   fit: BoxFit.cover,
+                                // ),
+                                child: CachedNetworkImage(
+                                  imageUrl: song['artwork'],
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -343,8 +348,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     borderRadius: BorderRadiusGeometry.circular(
                                       8,
                                     ),
-                                    child: Image.network(
-                                      element['artwork'],
+                                    // child: Image.network(
+                                    //   element['artwork'],
+                                    //   fit: BoxFit.cover,
+                                    // ),
+                                    child: CachedNetworkImage(
+                                      imageUrl: element['artwork'],
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -516,6 +525,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const SizedBox(height: 2),
+
+                  //Yaha se saare provider me dalke fir fetch krvwaana hai
                   FutureBuilder<List<TrackModel>>(
                     future: AudisApi().getTrendingTracks(),
 
@@ -555,11 +566,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                    child: Image.network(
-                                      song.artwork ?? "",
+                                    // child: Image.network(
+                                    //   song.artwork ?? "",
+                                    //   fit: BoxFit.cover,
+                                    //   height: 160,
+                                    //   width: 150,
+                                    // ),
+                                    child: CachedNetworkImage(
+                                      imageUrl: song.artwork ?? "",
                                       fit: BoxFit.cover,
-                                      height: 160,
-                                      width: 150,
                                     ),
                                   ),
                                   const SizedBox(height: 8),

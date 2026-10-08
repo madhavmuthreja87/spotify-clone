@@ -41,6 +41,7 @@ dependencies:
   hive_flutter: 
   palette_generator_plus: 
   lottie: 
+  cached_network_image: 
 
 
   # live_activity_kit: ^1.1.1
@@ -51,6 +52,8 @@ dependencies:
   audio_session:
 
   live_activities: 
+
+  
 
  
 dev_dependencies:

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:palette_generator_plus/palette_generator_plus.dart';
@@ -111,8 +112,14 @@ class _MiniPlayerState extends State<MiniPlayer> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(6),
-                          child: Image.network(
-                            widget.song.artwork ?? "",
+                          // child: Image.network(
+                          //   widget.song.artwork ?? "",
+                          //   fit: BoxFit.cover,
+                          //   height: 40,
+                          //   width: 40,
+                          // ),
+                          child: CachedNetworkImage(
+                            imageUrl: widget.song.artwork ?? "",
                             fit: BoxFit.cover,
                             height: 40,
                             width: 40,
