@@ -40,38 +40,46 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // final tracker = context.watch<TrackProvider>();
+    // final secondElement = tracker.recentSongs()[1];
+    // final thirdElement = tracker.recentSongs()[2];
+    // final fourthElement = tracker.recentSongs()[3];
+    // final fifthElement = tracker.recentSongs()[4];
+    // final sixthElement = tracker.recentSongs()[5];
+
+    // final mostPlayed0 = tracker.mostPlayedSong()[0];
+    // final mostPlayed1 = tracker.mostPlayedSong()[1];
+    // final mostPlayed2 = tracker.mostPlayedSong()[2];
+    // final mostPlayed3 = tracker.mostPlayedSong()[3];
+    // final mostPlayed4 = tracker.mostPlayedSong()[4];
+    // final mostPlayed5 = tracker.mostPlayedSong()[5];
+    // final mostPlayed6 = tracker.mostPlayedSong()[6];
+
+    // List<Map> justBackIn = [
+    //   secondElement,
+    //   thirdElement,
+    //   fourthElement,
+    //   fifthElement,
+    //   sixthElement,
+    // ];
+
+    // List<Map> mostPlayed = [
+    //   mostPlayed0,
+    //   mostPlayed1,
+    //   mostPlayed2,
+    //   mostPlayed3,
+    //   mostPlayed4,
+    //   mostPlayed5,
+    //   mostPlayed6,
+    // ];
     final tracker = context.watch<TrackProvider>();
-    final secondElement = tracker.recentSongs()[1];
-    final thirdElement = tracker.recentSongs()[2];
-    final fourthElement = tracker.recentSongs()[3];
-    final fifthElement = tracker.recentSongs()[4];
-    final sixthElement = tracker.recentSongs()[5];
 
-    final mostPlayed0 = tracker.mostPlayedSong()[0];
-    final mostPlayed1 = tracker.mostPlayedSong()[1];
-    final mostPlayed2 = tracker.mostPlayedSong()[2];
-    final mostPlayed3 = tracker.mostPlayedSong()[3];
-    final mostPlayed4 = tracker.mostPlayedSong()[4];
-    final mostPlayed5 = tracker.mostPlayedSong()[5];
-    final mostPlayed6 = tracker.mostPlayedSong()[6];
+    final recent = tracker.recentSongs();
+    final mostPlayed = tracker.mostPlayedSong();
 
-    List<Map> justBackIn = [
-      secondElement,
-      thirdElement,
-      fourthElement,
-      fifthElement,
-      sixthElement,
-    ];
-
-    List<Map> mostPlayed = [
-      mostPlayed0,
-      mostPlayed1,
-      mostPlayed2,
-      mostPlayed3,
-      mostPlayed4,
-      mostPlayed5,
-      mostPlayed6,
-    ];
+    final justBackIn = recent.length > 1
+        ? recent.skip(1).take(5).toList()
+        : <Map>[];
 
     return Scaffold(
       backgroundColor: const Color(0xFF121212),

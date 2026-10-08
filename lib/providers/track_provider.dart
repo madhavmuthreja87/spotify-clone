@@ -135,21 +135,21 @@ class TrackProvider extends ChangeNotifier {
       await saveRecentSongs(song);
 
       // First try the URL we already have.
-      String? url = song.streamUrl;
+      // String? url = song.streamUrl;
 
-      if (url == null || url.isEmpty) {
-        throw Exception("Stream URL is empty");
-      }
+      // if (url == null || url.isEmpty) {
+      //   throw Exception("Stream URL is empty");
+      // }
 
       try {
-        // Fast path
-        await player.setUrl(url);
-        await player.play();
+        //   // Fast path
+        //   await player.setUrl(url);
+        //   await player.play();
 
-        isPlaying = true;
-        notifyListeners();
-      } catch (e) {
-        log("Old stream URL failed. Getting fresh URL...");
+        //   isPlaying = true;
+        //   notifyListeners();
+        // } catch (e) {
+        log("Getting fresh URL...");
 
         // URL may have expired -> get a new signed URL
         final freshUrl = await AudisApi().getFreshStreamUrl(song.id);
@@ -158,10 +158,11 @@ class TrackProvider extends ChangeNotifier {
 
         isPlaying = true;
         notifyListeners();
+        // Only count after successful playback
+        await recordSongPlayedCount(song);
+      } catch (e) {
+        log("$e");
       }
-
-      // Only count after successful playback
-      await recordSongPlayedCount(song);
     } catch (e, st) {
       log("PLAY ERROR: $e");
       log("$st");
