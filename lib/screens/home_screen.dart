@@ -306,104 +306,119 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
 
                   const SizedBox(height: 30),
-                  Text(
-                    "Just back in",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 21,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height / 3.8,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: justBackIn.length,
-                      itemBuilder: (context, index) {
-                        Map<dynamic, dynamic> element = justBackIn[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 15, top: 6),
-                          child: GestureDetector(
-                            onTap: () {
-                              context.read<TrackProvider>().setSongAndPlay(
-                                TrackModel(
-                                  id: element['id'] ?? "",
-                                  title: element['title'] ?? "",
-                                  artist: element['artist'] ?? "",
-                                  duration: element['duration'] ?? "",
-                                  isStreamable: element['isStreamable'] ?? "",
-                                  artwork: element['artwork'] ?? "",
-                                  streamUrl: element['streamUrl'] ?? "",
+
+                  justBackIn.length > 2
+                      ? Text(
+                          "Just back in",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 21,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        )
+                      : SizedBox(height: 0),
+                  justBackIn.length > 2
+                      ? SizedBox(
+                          height: MediaQuery.sizeOf(context).height / 3.8,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: justBackIn.length,
+                            itemBuilder: (context, index) {
+                              Map<dynamic, dynamic> element = justBackIn[index];
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                  right: 15,
+                                  top: 6,
+                                ),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    context
+                                        .read<TrackProvider>()
+                                        .setSongAndPlay(
+                                          TrackModel(
+                                            id: element['id'] ?? "",
+                                            title: element['title'] ?? "",
+                                            artist: element['artist'] ?? "",
+                                            duration: element['duration'] ?? "",
+                                            isStreamable:
+                                                element['isStreamable'] ?? "",
+                                            artwork: element['artwork'] ?? "",
+                                            streamUrl:
+                                                element['streamUrl'] ?? "",
+                                          ),
+                                        );
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.transparent,
+                                    ),
+                                    height:
+                                        MediaQuery.sizeOf(context).height / 3.8,
+                                    width:
+                                        MediaQuery.sizeOf(context).width / 2.5,
+
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadiusGeometry.circular(8),
+                                          // child: Image.network(
+                                          //   element['artwork'],
+                                          //   fit: BoxFit.cover,
+                                          // ),
+                                          child: Container(
+                                            color: const Color.fromARGB(
+                                              225,
+                                              160,
+                                              160,
+                                              160,
+                                            ),
+                                            height: 150,
+                                            width: double.infinity,
+                                            child: CachedNetworkImage(
+                                              imageUrl: element['artwork'],
+                                              fit: BoxFit.cover,
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Center(
+                                                        child: Icon(
+                                                          Icons.music_note,
+                                                          color: Colors.white,
+                                                          size: 44,
+                                                        ),
+                                                      ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          "Song",
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        Text(
+                                          element['title'],
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               );
                             },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.transparent,
-                              ),
-                              height: MediaQuery.sizeOf(context).height / 3.8,
-                              width: MediaQuery.sizeOf(context).width / 2.5,
-
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadiusGeometry.circular(
-                                      8,
-                                    ),
-                                    // child: Image.network(
-                                    //   element['artwork'],
-                                    //   fit: BoxFit.cover,
-                                    // ),
-                                    child: Container(
-                                      color: const Color.fromARGB(
-                                        225,
-                                        160,
-                                        160,
-                                        160,
-                                      ),
-                                      height: 150,
-                                      width: double.infinity,
-                                      child: CachedNetworkImage(
-                                        imageUrl: element['artwork'],
-                                        fit: BoxFit.cover,
-                                        errorWidget: (context, url, error) =>
-                                            const Center(
-                                              child: Icon(
-                                                Icons.music_note,
-                                                color: Colors.white,
-                                                size: 44,
-                                              ),
-                                            ),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    "Song",
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  Text(
-                                    element['title'],
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
                           ),
-                        );
-                      },
-                    ),
-                  ),
+                        )
+                      : SizedBox(height: 0),
                   // SingleChildScrollView(
                   //   scrollDirection: Axis.horizontal,
                   //   child: Row(
