@@ -14,29 +14,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  void display() async {
-    AudisApi api = AudisApi();
-
-    final l = await api.getTrendingTracks();
-
-    for (var i in l) {
-      print("Title: ${i.title}");
-      print("isStreamable: ${i.isStreamable}");
-      print("Artist: ${i.artist}");
-      print("ID: ${i.id}");
-      print("-------------");
-    }
-  }
-
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<TrackProvider>().addTemporaryMostPlayedData();
+      context.read<TrackProvider>().fetchTrendingSongs();
     });
-
-    display();
   }
 
   @override
@@ -81,6 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final justBackIn = recent.length > 1
         ? recent.skip(1).take(5).toList()
         : <Map>[];
+
+    final trendingSongs = tracker.trendingSongs();
 
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
@@ -318,7 +305,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemBuilder: (context, index) {
                         Map<dynamic, dynamic> element = justBackIn[index];
                         return Padding(
-                          padding: const EdgeInsets.only(right: 6, top: 6),
+                          padding: const EdgeInsets.only(right: 15, top: 6),
                           child: GestureDetector(
                             onTap: () {
                               context.read<TrackProvider>().setSongAndPlay(
@@ -352,9 +339,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                     //   element['artwork'],
                                     //   fit: BoxFit.cover,
                                     // ),
-                                    child: CachedNetworkImage(
-                                      imageUrl: element['artwork'],
-                                      fit: BoxFit.cover,
+                                    child: Container(
+                                      color: const Color.fromARGB(
+                                        225,
+                                        160,
+                                        160,
+                                        160,
+                                      ),
+                                      height: 150,
+                                      width: double.infinity,
+                                      child: CachedNetworkImage(
+                                        imageUrl: element['artwork'],
+                                        fit: BoxFit.cover,
+                                        errorWidget: (context, url, error) =>
+                                            const Center(
+                                              child: Icon(
+                                                Icons.music_note,
+                                                color: Colors.white,
+                                                size: 44,
+                                              ),
+                                            ),
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(height: 10),
@@ -527,81 +532,173 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 2),
 
                   //Yaha se saare provider me dalke fir fetch krvwaana hai
-                  FutureBuilder<List<TrackModel>>(
-                    future: AudisApi().getTrendingTracks(),
-
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      }
-
-                      if (snapshot.hasError) {
-                        return Text(
-                          "Error: ${snapshot.error}",
-                          style: const TextStyle(color: Colors.white),
-                        );
-                      }
-
-                      final songs = snapshot.data!;
-
-                      return SizedBox(
-                        height: MediaQuery.sizeOf(context).height / 3.5,
-
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: songs.length,
-                          itemBuilder: (context, index) {
-                            final song = songs[index];
-
-                            return Container(
+                  SizedBox(
+                    height: MediaQuery.sizeOf(context).height / 3.8,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: trendingSongs.length,
+                      itemBuilder: (context, index) {
+                        final element = trendingSongs[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 15, top: 6),
+                          child: GestureDetector(
+                            onTap: () {
+                              context.read<TrackProvider>().setSongAndPlay(
+                                element,
+                                // TrackModel(
+                                //   id: element['id'] ?? "",
+                                //   title: element['title'] ?? "",
+                                //   artist: element['artist'] ?? "",
+                                //   duration: element['duration'] ?? "",
+                                //   isStreamable: element['isStreamable'] ?? "",
+                                //   artwork: element['artwork'] ?? "",
+                                //   streamUrl: element['streamUrl'] ?? "",
+                                // ),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.transparent,
+                              ),
                               height: MediaQuery.sizeOf(context).height / 3.8,
                               width: MediaQuery.sizeOf(context).width / 2.5,
 
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              padding: EdgeInsets.only(right: 10),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadiusGeometry.circular(
+                                      8,
+                                    ),
                                     // child: Image.network(
-                                    //   song.artwork ?? "",
+                                    //   element['artwork'],
                                     //   fit: BoxFit.cover,
-                                    //   height: 160,
-                                    //   width: 150,
                                     // ),
-                                    child: CachedNetworkImage(
-                                      imageUrl: song.artwork ?? "",
-                                      fit: BoxFit.cover,
+                                    child: Container(
+                                      color: const Color.fromARGB(
+                                        225,
+                                        160,
+                                        160,
+                                        160,
+                                      ),
+                                      height: 150,
+                                      width: double.infinity,
+                                      child: CachedNetworkImage(
+                                        imageUrl: element.artwork!,
+                                        fit: BoxFit.cover,
+                                        errorWidget: (context, url, error) =>
+                                            const Center(
+                                              child: Icon(
+                                                Icons.music_note,
+                                                color: Colors.white,
+                                                size: 44,
+                                              ),
+                                            ),
+                                      ),
                                     ),
                                   ),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: 10),
                                   Text(
-                                    song.title,
+                                    "Song",
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    element.title,
                                     maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  Text(
-                                    song.artist,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: Colors.white),
-                                  ),
                                 ],
                               ),
-                            );
-                          },
-                        ),
-                      );
-                    },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
+                  // FutureBuilder<List<TrackModel>>(
+                  //   future: AudisApi().getTrendingTracks(),
+
+                  //   builder: (context, snapshot) {
+                  //     if (snapshot.connectionState == ConnectionState.waiting) {
+                  //       return const CircularProgressIndicator();
+                  //     }
+
+                  //     if (snapshot.hasError) {
+                  //       return Text(
+                  //         "Error: ${snapshot.error}",
+                  //         style: const TextStyle(color: Colors.white),
+                  //       );
+                  //     }
+
+                  //     final songs = snapshot.data!;
+
+                  //     return SizedBox(
+                  //       height: MediaQuery.sizeOf(context).height / 3.5,
+
+                  //       child: ListView.builder(
+                  //         scrollDirection: Axis.horizontal,
+                  //         itemCount: songs.length,
+                  //         itemBuilder: (context, index) {
+                  //           final song = songs[index];
+
+                  //           return Container(
+                  //             height: MediaQuery.sizeOf(context).height / 3.8,
+                  //             width: MediaQuery.sizeOf(context).width / 2.5,
+
+                  //             decoration: BoxDecoration(
+                  //               borderRadius: BorderRadius.circular(10),
+                  //             ),
+                  //             padding: EdgeInsets.only(right: 10),
+                  //             child: Column(
+                  //               crossAxisAlignment: CrossAxisAlignment.start,
+                  //               children: [
+                  //                 ClipRRect(
+                  //                   borderRadius: BorderRadius.circular(10),
+                  //                   // child: Image.network(
+                  //                   //   song.artwork ?? "",
+                  //                   //   fit: BoxFit.cover,
+                  //                   //   height: 160,
+                  //                   //   width: 150,
+                  //                   // ),
+                  //                   child: CachedNetworkImage(
+                  //                     imageUrl: song.artwork ?? "",
+                  //                     fit: BoxFit.cover,
+                  //                   ),
+                  //                 ),
+                  //                 const SizedBox(height: 8),
+                  //                 Text(
+                  //                   song.title,
+                  //                   maxLines: 1,
+                  //                   overflow: TextOverflow.ellipsis,
+                  //                   style: TextStyle(
+                  //                     color: Colors.white,
+                  //                     fontSize: 16,
+                  //                     fontWeight: FontWeight.w600,
+                  //                   ),
+                  //                 ),
+                  //                 Text(
+                  //                   song.artist,
+                  //                   maxLines: 1,
+                  //                   overflow: TextOverflow.ellipsis,
+                  //                   style: TextStyle(color: Colors.white),
+                  //                 ),
+                  //               ],
+                  //             ),
+                  //           );
+                  //         },
+                  //       ),
+                  //     );
+                  //   },
+                  // ),
+                  const SizedBox(height: 100),
                   Text("Hello", style: TextStyle(color: Colors.white)),
                 ],
               ),

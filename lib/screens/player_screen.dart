@@ -83,8 +83,8 @@ class _PlayerScreenState extends State<PlayerScreen>
           "Recommended for you",
           style: TextStyle(
             color: Colors.white,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
+            fontSize: 14.2,
+            fontWeight: FontWeight.w600,
           ),
         ),
         actions: [
@@ -115,7 +115,9 @@ class _PlayerScreenState extends State<PlayerScreen>
                 children: [
                   const SizedBox(height: 40),
                   Card(
-                    elevation: 20,
+                    elevation: 22,
+                    shadowColor: Colors.black,
+                    borderOnForeground: true,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       // child: Image.network(
