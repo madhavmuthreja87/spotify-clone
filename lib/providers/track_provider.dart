@@ -19,6 +19,7 @@ class TrackProvider extends ChangeNotifier {
   bool isPlaying = false;
 
   List<TrackModel> trendingSongsList = [];
+  List<TrackModel> latestSongsList = [];
 
   final Box recentBox = Hive.box("recentSongs");
   final Box likedBox = Hive.box("likedSongs");
@@ -239,6 +240,20 @@ class TrackProvider extends ChangeNotifier {
 
   List<TrackModel> trendingSongs() {
     return trendingSongsList;
+  }
+
+  Future<void> fetchLatestSongs() async {
+    try {
+      latestSongsList = await AudisApi().getLatestTracks();
+
+      notifyListeners();
+    } catch (e) {
+      print("Error fetching trending songs: $e");
+    }
+  }
+
+  List<TrackModel> LatestSongs() {
+    return latestSongsList;
   }
 
   List<Map> mostPlayedSong() {

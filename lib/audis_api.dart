@@ -22,6 +22,22 @@ class AudisApi {
     return data.map((track) => TrackModel.fromjson(track)).toList();
   }
 
+  //basically i will add the category of songs choosen in the query section fro discover something new section for testing i added punjabi
+  Future<List<TrackModel>> getLatestTracks() async {
+    log("Get latest songs called");
+    final url = Uri.parse('$baseUrl/tracks/search?query=punjabi&limit=20');
+    final response = await http.get(url);
+
+    if (response.statusCode != 200) {
+      throw Exception("Faild to fetch trending tracks: ${response.statusCode}");
+    }
+
+    final Map<String, dynamic> json = jsonDecode(response.body);
+    final List data = json['data'] ?? [];
+
+    return data.map((track) => TrackModel.fromjson(track)).toList();
+  }
+
   Future<List<TrackModel>> searchTracks(String query) async {
     log("Searching songs called");
 
