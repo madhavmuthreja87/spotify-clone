@@ -81,8 +81,8 @@ class _MiniPlayerState extends State<MiniPlayer> {
             pageBuilder: (context, animation, secondaryAnimation) {
               return PlayerScreen(song: widget.song);
             },
-            transitionDuration: const Duration(milliseconds: 420),
-            reverseTransitionDuration: const Duration(milliseconds: 350),
+            transitionDuration: const Duration(milliseconds: 450),
+            reverseTransitionDuration: const Duration(milliseconds: 380),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
                   const begin = Offset(0.0, 1.0);
@@ -137,6 +137,15 @@ class _MiniPlayerState extends State<MiniPlayer> {
                           fit: BoxFit.cover,
                           height: 40,
                           width: 40,
+                          errorWidget: (context, url, error) => Container(
+                            color: const Color.fromARGB(225, 160, 160, 160),
+                            child: const Center(
+                              child: Icon(
+                                Icons.music_note,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),

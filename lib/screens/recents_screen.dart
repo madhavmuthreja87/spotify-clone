@@ -146,6 +146,15 @@ class _RecentsScreenState extends State<RecentsScreen> {
                           fit: BoxFit.cover,
                           height: 50,
                           width: 50,
+                          errorWidget: (context, url, error) => Container(
+                            color: const Color.fromARGB(225, 160, 160, 160),
+                            child: const Center(
+                              child: Icon(
+                                Icons.music_note,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
 
@@ -361,6 +370,23 @@ class _RecentsScreenState extends State<RecentsScreen> {
                                             fit: BoxFit.cover,
                                             height: 47,
                                             width: 47,
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Container(
+                                                      color:
+                                                          const Color.fromARGB(
+                                                            225,
+                                                            160,
+                                                            160,
+                                                            160,
+                                                          ),
+                                                      child: const Center(
+                                                        child: Icon(
+                                                          Icons.music_note,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
                                           ),
                                         ),
                                         title: Text(

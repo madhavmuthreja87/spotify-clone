@@ -273,6 +273,20 @@ class _LikedSongsState extends State<LikedSongs> {
                                 fit: BoxFit.cover,
                                 height: 50,
                                 width: 50,
+                                errorWidget: (context, url, error) => Container(
+                                  color: const Color.fromARGB(
+                                    225,
+                                    160,
+                                    160,
+                                    160,
+                                  ),
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.music_note,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                             title: Text(

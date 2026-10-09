@@ -264,6 +264,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: CachedNetworkImage(
                                   imageUrl: song['artwork'],
                                   fit: BoxFit.cover,
+                                  height: 51,
+                                  width: 51,
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                        color: const Color.fromARGB(
+                                          225,
+                                          160,
+                                          160,
+                                          160,
+                                        ),
+                                        child: const Center(
+                                          child: Icon(
+                                            Icons.music_note,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
                                 ),
                               ),
 

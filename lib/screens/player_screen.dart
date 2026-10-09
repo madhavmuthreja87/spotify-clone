@@ -131,6 +131,16 @@ class _PlayerScreenState extends State<PlayerScreen>
                         fit: BoxFit.cover,
                         height: 320,
                         width: 340,
+                        errorWidget: (context, url, error) => Container(
+                          color: const Color.fromARGB(225, 160, 160, 160),
+                          child: const Center(
+                            child: Icon(
+                              Icons.music_note,
+                              size: 110,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),

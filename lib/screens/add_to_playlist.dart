@@ -93,6 +93,15 @@ class _AddToPlaylistState extends State<AddToPlaylist> {
                               fit: BoxFit.cover,
                               height: 47,
                               width: 47,
+                              errorWidget: (context, url, error) => Container(
+                                color: const Color.fromARGB(225, 160, 160, 160),
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.music_note,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                           title: Text(
