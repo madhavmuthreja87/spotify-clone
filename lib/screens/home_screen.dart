@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -243,62 +245,85 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           );
                         }
-                        final song = mostPlayed[index];
+                        final element= mostPlayed[index];
 
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(81, 116, 114, 114),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Row(
-                            children: [
-                              // Image
-                              ClipRRect(
-                                borderRadius: BorderRadiusGeometry.circular(5),
-                                // child: Image.network(
-                                //   song['artwork'],
-                                //   width: 51,
-                                //   height: double.infinity,
-                                //   fit: BoxFit.cover,
-                                // ),
-                                child: CachedNetworkImage(
-                                  imageUrl: song['artwork'],
-                                  fit: BoxFit.cover,
-                                  height: 51,
-                                  width: 51,
-                                  errorWidget: (context, url, error) =>
-                                      Container(
-                                        color: const Color.fromARGB(
-                                          225,
-                                          160,
-                                          160,
-                                          160,
-                                        ),
-                                        child: const Center(
-                                          child: Icon(
-                                            Icons.music_note,
-                                            color: Colors.white,
+                        return GestureDetector(
+                          onTap: ()
+                          {
+
+                            log("Most played song section pressed");
+
+                            context
+                                        .read<TrackProvider>()
+                                        .setSongAndPlay(
+                                          TrackModel(
+                                            id: element['id'] ?? "",
+                                            title: element['title'] ?? "",
+                                            artist: element['artist'] ?? "",
+                                            duration: element['duration'] ?? "",
+                                            isStreamable:
+                                                element['isStreamable'] ?? "",
+                                            artwork: element['artwork'] ?? "",
+                                            streamUrl:
+                                                element['streamUrl'] ?? "",
+                                          ),
+                                        );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(81, 116, 114, 114),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Row(
+                              children: [
+                                // Image
+                                ClipRRect(
+                                  borderRadius: BorderRadiusGeometry.circular(5),
+                                  // child: Image.network(
+                                  //   song['artwork'],
+                                  //   width: 51,
+                                  //   height: double.infinity,
+                                  //   fit: BoxFit.cover,
+                                  // ),
+                                  child: CachedNetworkImage(
+                                    imageUrl: element['artwork'],
+                                    fit: BoxFit.cover,
+                                    height: 51,
+                                    width: 51,
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                          color: const Color.fromARGB(
+                                            225,
+                                            160,
+                                            160,
+                                            160,
+                                          ),
+                                          child: const Center(
+                                            child: Icon(
+                                              Icons.music_note,
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                ),
-                              ),
-
-                              const SizedBox(width: 8),
-
-                              // Song title
-                              Expanded(
-                                child: Text(
-                                  song['title'],
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                              ),
-                            ],
+                          
+                                const SizedBox(width: 8),
+                          
+                                // Song title
+                                Expanded(
+                                  child: Text(
+                                   element['title'],
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
