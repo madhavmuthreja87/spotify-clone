@@ -52,6 +52,8 @@ dependencies:
 
   live_activities:
 
+  youtube_explode_dart: 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -73,7 +75,7 @@ flutter_launcher_icons:
   adaptive_icon_background: "#121212"
   adaptive_icon_foreground: "assets/icons/mfy-logo.png"
   remove_alpha_ios: true
-  
+
 flutter_native_splash:
   color: "#121212"
   color_dark: "#121212"

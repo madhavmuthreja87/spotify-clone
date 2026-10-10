@@ -46,6 +46,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home:SplashPage(), theme: ThemeData(scaffoldBackgroundColor: const Color(0xFF121212)), );
+    return MaterialApp(home:SplashPage(), theme: ThemeData(scaffoldBackgroundColor: const Color(0xFF121212)),debugShowCheckedModeBanner: false, );
   }
 }

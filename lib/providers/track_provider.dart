@@ -8,6 +8,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:sf/services/audio_handler.dart';
 import 'package:sf/services/audis_api.dart';
 import 'package:sf/models/track_model.dart';
+import 'package:sf/services/youtube_services.dart';
 
 class TrackProvider extends ChangeNotifier {
   // The handler owns the real player, so the notification, lock screen
@@ -159,7 +160,14 @@ class TrackProvider extends ChangeNotifier {
 
         // URL may have expired -> get a new signed URL
         final freshUrl = await AudisApi().getFreshStreamUrl(song.id);
-        await player.setUrl(freshUrl);
+
+        final yt=YoutubeServices();
+
+        final videos=await yt.searchFromYoutube(song.title);
+        final urlFromYt= await YoutubeServices().getAudioUrl(videos.first.id.value);
+        log("Playing from yt : ${videos.first.title}");
+
+        await player.setUrl(urlFromYt);
         await player.play();
 
         isPlaying = true;

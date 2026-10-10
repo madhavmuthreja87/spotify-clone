@@ -7,6 +7,7 @@ import 'package:sf/services/audis_api.dart';
 
 import 'package:sf/providers/track_provider.dart';
 import 'package:sf/models/track_model.dart';
+import 'package:sf/services/youtube_services.dart';
 
 class RecentsScreen extends StatefulWidget {
   const RecentsScreen({super.key});
@@ -33,6 +34,20 @@ class _RecentsScreenState extends State<RecentsScreen> {
 
     try {
       final results = await AudisApi().searchTracks(query);
+      final yt=YoutubeServices();
+
+      final videos=await yt.searchFromYoutube(query);
+      log("Youtube Search Details");
+      for(var i in videos)
+      {
+        print("Title: ${i.title}");
+       
+        print("Url: ${i.url}");
+        print("Song Data: ${i.musicData}");
+
+        print("\n");
+      }
+    
 
       // final streamableResults = results
       //     .where((song) => song.isStreamable)
