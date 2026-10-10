@@ -37,25 +37,21 @@ dependencies:
   just_audio:
   http:
   provider:
-  hive: 
-  hive_flutter: 
-  palette_generator_plus: 
-  lottie: 
-  cached_network_image: 
-
+  hive:
+  hive_flutter:
+  palette_generator_plus:
+  lottie:
+  cached_network_image:
 
   # live_activity_kit: ^1.1.1
   # notch:
   # overlay_pop_up: ^1.0.6+6
 
-  audio_service: 
+  audio_service:
   audio_session:
 
-  live_activities: 
+  live_activities:
 
-  
-
- 
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -67,6 +63,26 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
 
+  flutter_launcher_icons:
+  flutter_native_splash:
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/mfy-logo.png"
+  adaptive_icon_background: "#121212"
+  adaptive_icon_foreground: "assets/icons/mfy-logo.png"
+  remove_alpha_ios: true
+  
+flutter_native_splash:
+  color: "#121212"
+  color_dark: "#121212"
+  android_12:
+    color: "#121212"
+    color_dark: "#121212"
+    image: assets/icons/transparent.png
+  fullscreen: true
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -76,6 +92,7 @@ flutter:
 
   assets:
     - assets/animations/
+    - assets/icons/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

@@ -5,8 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
 import 'package:just_audio/just_audio.dart';
 
-import 'package:sf/audio_handler.dart';
-import 'package:sf/audis_api.dart';
+import 'package:sf/services/audio_handler.dart';
+import 'package:sf/services/audis_api.dart';
 import 'package:sf/models/track_model.dart';
 
 class TrackProvider extends ChangeNotifier {
@@ -36,6 +36,9 @@ class TrackProvider extends ChangeNotifier {
   // DEBUG ONLY: clears the box. Never call this in release builds.
   Future<void> addTemporaryMostPlayedData() async {
     await mostPlayedBox.clear();
+
+
+
 
     await mostPlayedBox.put('song1', {
       'id': 'song1',
